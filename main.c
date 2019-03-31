@@ -20,8 +20,11 @@ typedef struct qnode Node;
 struct Readers{
     char Studentnum[20];
     char Studentname[20];
+    char Collegename[50];
     char booksrentindex[20];
     char booksrentname[20];
+
+    //指向下一个节点的指针
     struct Readers * next;
 
 }Readers;
@@ -36,14 +39,16 @@ void writeTree( Node *head );
 void writeNode( FILE *fp, Node *node );
 void printOut( FILE *fp, Node *node );
 void readLibrary(Node *node );
-void readStudent();
+
+void readStudent(Reader *reader);
+
 int numcount();
 void growtree(Node *node);
 int judge(int numbers);
 void cyclewrite(FILE *fp,Node *node);
 void StudentRegister();
 void Listallbook(Node *node);
-void begin(Node *head);
+void begin(Node *head,Reader *reader);
 void Searchforbooks(Node *node,char * book);
 void Borrowingbooks(Node *node,char * Bbook);
 
@@ -56,6 +61,8 @@ int numbers;
 
 void ReturnaBook(Node *node,char * Rbook);
 void  Addbooks(Node * node,char * Abook);
+
+void PrintList(Reader *reader);
 // main
 
 int main( int argc, char **argv ) {
@@ -87,9 +94,12 @@ int main( int argc, char **argv ) {
   //writeTree(head);
 
   readLibrary(head);
-  readStudent();
 
-  begin(head);
+  Reader *reader;
+
+  readStudent(reader);
+
+  begin(head,reader);
 
   printf("已达到文章末尾.\n");
   return 0;
@@ -271,7 +281,7 @@ void printOut( FILE *fp, Node *node ) {
 }
 
 
-void begin(Node *head)
+void begin(Node *head,Reader *reader)
 {
     int choice;
     int door = 0;
@@ -423,6 +433,7 @@ void begin(Node *head)
                 Listallbook(head);
                 break;
             case 2:
+                PrintList(reader);
                 break;
             case 3:
 
@@ -468,16 +479,12 @@ void begin(Node *head)
                 {
                     RemoveBooks(head,Rbook);
                 }
-
-
                 break;
 
             case 5:
                 door = 1;
                 break;
             }
-
-
         }
 
         if(choice != 1 &&choice != 2)
@@ -488,9 +495,10 @@ void begin(Node *head)
   }while(door != 1);
 
 }
-void readStudent()
+
+void readStudent(Reader *reader)
 {
-    Reader *reader=(Reader *)malloc(sizeof(Reader));
+    reader=(Reader *)malloc(sizeof(Reader));
 
     FILE *fp=fopen("Students.txt","r");
     if(!fp)
@@ -498,23 +506,28 @@ void readStudent()
         printf("open error");
         return 0;
     }
-    char a[20],b[20],c[20],d[20];
+    char a[20],b[20],c[50],d[20],e[20];
 
     Reader *pnew;
-    while((fscanf(fp,"%s %s %s %s",&a,&b,&c,&d))!=EOF)
+
+    while((fscanf(fp,"%s %s %s %s %s",&a,&b,&c,&d,&e))!=EOF)
     {
         pnew = (Reader*)malloc(sizeof(Reader));
 
 		strcpy(pnew->Studentnum, a);
 		strcpy(pnew->Studentname, b);
-        strcpy(pnew->booksrentindex, c);
-		strcpy(pnew->booksrentname, d);
+		strcpy(pnew->Collegename, c);
+        strcpy(pnew->booksrentindex, d);
+		strcpy(pnew->booksrentname, e);
 
-        //printf("pnew->Studentnum = %s\n",pnew->Studentnum);
-        //printf("pnew->Studentname = %s\n",pnew->Studentname);
-        //printf("pnew->booksrentindex = %s\n",pnew->booksrentindex);
-        //printf("pnew->booksrentname = %s\n\n",pnew->booksrentname);
+        printf("pnew->Studentnum = %s\n",pnew->Studentnum);
+        printf("pnew->Studentname = %s\n",pnew->Studentname);
+        printf("pnew->Studentname = %s\n",pnew->Collegename);
+        printf("pnew->booksrentindex = %s\n",pnew->booksrentindex);
+        printf("pnew->booksrentname = %s\n\n",pnew->booksrentname);
 
+		//将节点插入,reader->next 赋值给 pnew->next 地址的赋值，然后 reader->next = pnew 再把pnew的地址赋值给reader->next;
+		//对单链表进行连接
 		pnew->next = reader->next;
 		reader->next = pnew;
     }
@@ -578,26 +591,61 @@ void StudentRegister()
             printf("    |--------------------------------------------------------------------------------------------|\n");
             printf("    |Please input your informations：(as shown below)                                            |\n");
             printf("    |--------------------------------------------------------------------------------------------|\n");
-            printf("    |1.Your Name:");
 
-            //如何做到对字符串的检测
-            char name[50];
-            scanf("%s",name);
-            printf("Please enter the correct name and do not include any numbers or other characters that do not match the name.\n");
+            int foo = -1;
+
+            do{
+                printf("    |1.Your Name:");
+
+                char name[50];
+                scanf("%s",name);
+
+                printf("    |1.Your Id Number:(Leeds College student number, nine digits)");
+
+                char number[10];
+                scanf("%s",number);
+
+                printf("    |3.Your Professional full name:(you'd better no more than ten characters)");
+
+                char college[50];
+                scanf("%s",college);
+
+                printf("    |--------------------------------------------------------------------------------------------|\n");
+                printf("    |--------------------------------------------------------------------------------------------|\n");
+                printf("    |Please make sure your information is correct:(We will compare false information later!!)    |\n");
+                printf("    |--------------------------------------------------------------------------------------------|\n");
+                printf("    |1.Your Name: %s ",name);
+                printf("    |2.Your Id Number: %s ",number);
+                printf("    |3.Your Professional full name: %s ",college);
+
+                printf("    |Please make sure that we have already got the right information .(1/yes and 0/no and -1/exit)\n");
 
 
-            printf("    |1.Your Id Number:(Leeds College student number, nine digits)");
+                scanf("%d",&foo);
 
-            char number[10];
-            scanf("%s",number);
+                if(foo == 1)
+                {
+                    printf("    |--------------------------------------------------------------------------------------------|\n");
+                    printf("    |The information is being processed.........                                                 |\n");
+                    printf("    |--------------------------------------------------------------------------------------------|\n");
 
-            printf("    |3.Your Professional full name:(you'd better no more than ten characters)");
 
-            char college[50];
-            scanf("%s",college);
 
-            printf("    |--------------------------------------------------------------------------------------------|\n");
 
+                }
+                else if(foo == -1)
+                {
+                    printf("    |--------------------------------------------------------------------------------------------|\n");
+                    printf("    |Preparing to exit.........                                                                  |\n");
+                    printf("    |--------------------------------------------------------------------------------------------|\n");
+                }
+                else
+                {
+                    printf("    |--------------------------------------------------------------------------------------------|\n");
+                    printf("    |Returning to original information page, please re - enter your information........          |\n");
+                    printf("    |--------------------------------------------------------------------------------------------|\n");
+                }
+            }while(foo != 1 || foo != -1);
 }
 
 void Listallbook(Node *node)
@@ -855,12 +903,34 @@ void  RemoveBooks(Node * node,char * Mbook)
                 printf("    |--------------------------------------------------------------------------------------------|\n");
                 printf("    |Error : This book is now in a lending state and cannot be removed                           |\n");
                 printf("    |--------------------------------------------------------------------------------------------|\n");
-
             }
         }
     }
 }
 
+void PrintList(Reader *reader){
+    Reader *p = (Reader*)malloc(sizeof(Reader));
+    p = reader->next;
+
+    if(!p)
+    {
+        printf("The list is empty!\n");
+        return;
+    }
+    while(p)
+    {
+        printf("    |--------------------------------------------------------------------------------------------|\n");
+        printf("     p->Studentnum = %s\n",p->Studentnum);
+        printf("     p->Studentname = %s\n",p->Studentname);
+        printf("     p->Studentname = %s\n",p->Collegename);
+        printf("     p->booksrentindex = %s\n",p->booksrentindex);
+        printf("     p->booksrentname = %s\n\n",p->booksrentname);
+        printf("    |--------------------------------------------------------------------------------------------|\n");
+        p=p->next;
+    }
+
+
+}
 
 
 
