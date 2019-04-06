@@ -27,30 +27,45 @@ struct Readers{
     //指向下一个节点的指针
     struct Readers * next;
 
-}Readers;
+};
 
 typedef struct Readers Reader;
 
 // function definitions
 
 Node *makeNode( double x, double y, int level );
+
+Reader* createList();
+
 void makeChildren( Node *parent );
 void writeTree( Node *head );
 void writeNode( FILE *fp, Node *node );
 void printOut( FILE *fp, Node *node );
-void readLibrary(Node *node );
+
+void readLibrary(Node* node );
+void WriteLibrary(Node* node);
 
 void readStudent(Reader *reader);
+void WriteStudent(Reader* pwrite);
 
 int numcount();
 void growtree(Node *node);
 int judge(int numbers);
-void cyclewrite(FILE *fp,Node *node);
+
+void cycleread(FILE *fp, Node *node);
+void cyclewrite(FILE *fp, Node *node);
+void writeList(Reader *pmove,FILE *fp2);
+
+
 void StudentRegister();
 void Listallbook(Node *node);
 void begin(Node *head,Reader *reader);
+
 void Searchforbooks(Node *node,char * book);
 void Borrowingbooks(Node *node,char * Bbook);
+void RemoveBooks(Node * node,char * Mbook);
+void ReturnaBook(Node *node,char * Rbook);
+void Addbooks(Node * node,char * Abook);
 
 int ExiorNot3;
 int ExiorNot4;
@@ -59,10 +74,11 @@ int ExiorNot6;
 int MaxAdd = -1;
 int numbers;
 
-void ReturnaBook(Node *node,char * Rbook);
-void  Addbooks(Node * node,char * Abook);
+void printList(Reader* pMove);
+void addStudent(Reader* pAdd,char* Studentnum,char* Studentname,char* Collegename);
+void StudentRegister(Reader*reader);
 
-void PrintList(Reader *reader);
+
 // main
 
 int main( int argc, char **argv ) {
@@ -90,12 +106,14 @@ int main( int argc, char **argv ) {
   }
 
 
-  // print the tree for Gnuplot
+  //print the tree for Gnuplot
   //writeTree(head);
 
   readLibrary(head);
 
-  Reader *reader;
+  //Reader *reader;
+
+  Reader* reader = createList();
 
   readStudent(reader);
 
@@ -105,6 +123,39 @@ int main( int argc, char **argv ) {
   return 0;
 }
 
+
+Reader* createList()
+{
+	Reader* headNode = (Reader*)malloc(sizeof(Reader));
+	headNode->next = NULL;
+	return headNode;
+}
+
+void printList(Reader* pMove)
+{
+    if(!pMove)
+    {
+       return;
+    }
+    else
+    {
+       printList(pMove->next);
+       printf("    |");
+       printf("%s        %10s",pMove->Studentnum,pMove->Studentname,pMove->Collegename,pMove->booksrentindex,pMove->booksrentname);
+       printf("%25s        %s        《%s》\n",pMove->Collegename,pMove->booksrentindex,pMove->booksrentname);
+       printf("    |--------------------------------------------------------------------------------------------|\n");
+    }
+}
+
+void addStudent(Reader* reader,char* Studentnum,char* Studentname,char* Collegename)
+{
+    Reader* pAdd = reader->next;
+
+   	strcpy(pAdd->Studentnum, Studentnum);
+    strcpy(pAdd->Studentname, Studentname);
+    strcpy(pAdd->Collegename, Collegename);
+    pAdd = pAdd -> next;
+}
 
 
 int judge(int numbers)
@@ -319,7 +370,7 @@ void begin(Node *head,Reader *reader)
             switch(stuChoice)
             {
                 case 1:
-                       StudentRegister();
+                       StudentRegister(reader);
                     break;
 
                 case 2:
@@ -426,14 +477,20 @@ void begin(Node *head,Reader *reader)
 
             int staChoice;
             scanf("%d",&staChoice);
+            Reader * pMove = reader->next;
 
             switch(staChoice)
             {
             case 1:
+                printf("    |----------------------------------------------------------------------------|\n");
                 Listallbook(head);
+
                 break;
             case 2:
-                PrintList(reader);
+                 printf("    |--------------------------------------------------------------------------------------------|\n");
+                 printf("    |Studentnum------Studentname----------Collegename------Index---------Booksrentname-----------|\n");
+                 printf("    |--------------------------------------------------------------------------------------------|\n");
+                 printList(pMove);
                 break;
             case 3:
 
@@ -493,13 +550,13 @@ void begin(Node *head,Reader *reader)
             fflush(stdin);
         }
   }while(door != 1);
+  WriteLibrary(head);
+  WriteStudent(reader);
 
 }
 
 void readStudent(Reader *reader)
 {
-    reader=(Reader *)malloc(sizeof(Reader));
-
     FILE *fp=fopen("Students.txt","r");
     if(!fp)
     {
@@ -520,6 +577,7 @@ void readStudent(Reader *reader)
         strcpy(pnew->booksrentindex, d);
 		strcpy(pnew->booksrentname, e);
 
+        printf("Welcome readStudent().\n");
         printf("pnew->Studentnum = %s\n",pnew->Studentnum);
         printf("pnew->Studentname = %s\n",pnew->Studentname);
         printf("pnew->Studentname = %s\n",pnew->Collegename);
@@ -545,12 +603,12 @@ void readLibrary(Node *node)
 	}
 	else
 	{
-		cyclewrite(fp,node);
+		cycleread(fp,node);
 	}
-
+    fclose(fp);
 }
 
-void cyclewrite(FILE *fp, Node *node)
+void cycleread(FILE *fp, Node *node)
 {
   int i;
   int a;
@@ -564,7 +622,7 @@ void cyclewrite(FILE *fp, Node *node)
   {
      for(i = 0;i < 4;i++)
      {
-              cyclewrite(fp,node->child[i]);
+              cycleread(fp,node->child[i]);
               if((fscanf(fp,"%d %s %d",&a,&b,&c))!=EOF)
               {
                   //strcpy(node->child[i]->booksindex,a);
@@ -584,7 +642,7 @@ void cyclewrite(FILE *fp, Node *node)
      }
 }
 
-void StudentRegister()
+void StudentRegister(Reader*reader)
 {
             printf("    |--------------------------------------------------------------------------------------------|\n");
             printf("    |                           Student Register                                                 |\n");
@@ -592,8 +650,7 @@ void StudentRegister()
             printf("    |Please input your informations：(as shown below)                                            |\n");
             printf("    |--------------------------------------------------------------------------------------------|\n");
 
-            int foo = -1;
-
+            int choice;
             do{
                 printf("    |1.Your Name:");
 
@@ -614,38 +671,39 @@ void StudentRegister()
                 printf("    |--------------------------------------------------------------------------------------------|\n");
                 printf("    |Please make sure your information is correct:(We will compare false information later!!)    |\n");
                 printf("    |--------------------------------------------------------------------------------------------|\n");
-                printf("    |1.Your Name: %s ",name);
-                printf("    |2.Your Id Number: %s ",number);
-                printf("    |3.Your Professional full name: %s ",college);
+                printf("    |1.Your Name: %s\n",name);
+                printf("    |2.Your Id Number: %s\n",number);
+                printf("    |3.Your Professional full name: %s\n",college);
 
                 printf("    |Please make sure that we have already got the right information .(1/yes and 0/no and -1/exit)\n");
 
 
-                scanf("%d",&foo);
+                scanf("%d",&choice);
 
-                if(foo == 1)
+                if(choice == 1)
                 {
                     printf("    |--------------------------------------------------------------------------------------------|\n");
                     printf("    |The information is being processed.........                                                 |\n");
                     printf("    |--------------------------------------------------------------------------------------------|\n");
+                    addStudent(reader,number,name,college);
 
-
-
-
+                    break;
                 }
-                else if(foo == -1)
+                else if(choice == -1)
                 {
                     printf("    |--------------------------------------------------------------------------------------------|\n");
                     printf("    |Preparing to exit.........                                                                  |\n");
                     printf("    |--------------------------------------------------------------------------------------------|\n");
+                    break;
                 }
                 else
                 {
                     printf("    |--------------------------------------------------------------------------------------------|\n");
                     printf("    |Returning to original information page, please re - enter your information........          |\n");
                     printf("    |--------------------------------------------------------------------------------------------|\n");
+                    fflush(stdin);
                 }
-            }while(foo != 1 || foo != -1);
+            }while(choice != 1 ||choice != -1 );
 }
 
 void Listallbook(Node *node)
@@ -661,7 +719,7 @@ void Listallbook(Node *node)
         {
            Listallbook(node->child[i]);
 
-           if(node->child[i]->borrow != -1)
+           if(node->child[i]->borrow == 1 ||node->child[i]->borrow == 0)
            {
                printf("    |");
                printf("%4d        %-40s ",node->child[i]->booksindex,node->child[i]->booksname);
@@ -892,7 +950,7 @@ void  RemoveBooks(Node * node,char * Mbook)
 
             if(node->child[i]->borrow == 1 && strcmp(node->child[i]->booksname,Mbook) == 0)
             {
-                node->child[i]->borrow = -1;
+                node->child[i]->borrow = -2;
                 printf("    |--------------------------------------------------------------------------------------------|\n");
                 printf("    |Success : This book is now been removed !!                                                  |\n");
                 printf("    |--------------------------------------------------------------------------------------------|\n");
@@ -908,29 +966,78 @@ void  RemoveBooks(Node * node,char * Mbook)
     }
 }
 
-void PrintList(Reader *reader){
-    Reader *p = (Reader*)malloc(sizeof(Reader));
-    p = reader->next;
-
-    if(!p)
-    {
-        printf("The list is empty!\n");
-        return;
-    }
-    while(p)
-    {
-        printf("    |--------------------------------------------------------------------------------------------|\n");
-        printf("     p->Studentnum = %s\n",p->Studentnum);
-        printf("     p->Studentname = %s\n",p->Studentname);
-        printf("     p->Studentname = %s\n",p->Collegename);
-        printf("     p->booksrentindex = %s\n",p->booksrentindex);
-        printf("     p->booksrentname = %s\n\n",p->booksrentname);
-        printf("    |--------------------------------------------------------------------------------------------|\n");
-        p=p->next;
-    }
-
+void WriteLibrary(Node* node)
+{
+    FILE *fp1=fopen("Library.txt","w");
+    if (!fp1)
+	{
+		printf("open error");
+		return;
+	}
+	else
+	{
+		cyclewrite(fp1,node);
+	}
+    fclose(fp1);
 
 }
+
+void cyclewrite(FILE *fp1, Node *node)
+{
+    int i;
+    if( node->child[0] == NULL )
+    {
+       return;
+    }
+    else
+    {
+        for(i=0; i<4; i++)
+        {
+            cyclewrite(fp1, node->child[i]);
+            if(node->child[i]->borrow == 1 || node->child[i]->borrow == 0)  //只有在未被移除地情况下，才写入
+            {
+                printf("node->child[i]->booksindex = %d\n",node->child[i]->booksindex);
+                printf("node->child[i]->booksname = %s\n",node->child[i]->booksname);
+                printf("node->child[i]->borrow = %d\n\n",node->child[i]->borrow);
+                fprintf(fp1,"%d %s %d\n",node->child[i]->booksindex,node->child[i]->booksname,node->child[i]->borrow);
+            }
+
+        }
+    }
+
+}
+
+void WriteStudent(Reader* reader)
+{
+    FILE *fp2=fopen("Students.txt","w");
+
+    Reader *pwrite;
+    pwrite = (Reader*)malloc(sizeof(Reader));
+
+
+    pwrite = reader->next;
+
+    writeList(pwrite,fp2);
+
+    fclose(fp2);
+
+    return 0;
+}
+
+void writeList(Reader *pmove,FILE *fp2)
+{
+	if(pmove == NULL)
+    {
+        return;
+    }
+    else{
+        writeList(pmove->next,fp2);
+        fprintf(fp2,"%s %s %s %s %s\n",pmove->Studentnum,pmove->Studentname,pmove->Collegename,pmove->booksrentindex,pmove->booksrentname);
+        pmove=pmove->next;
+    }
+}
+
+
 
 
 
