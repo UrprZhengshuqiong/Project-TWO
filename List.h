@@ -17,4 +17,10 @@ Reader* createList();
 
 void printList(Reader* pMove);
 
+void WriteStudent(Reader* pwrite);
+
+void writeList(Reader *pmove,FILE *fp2);
+
+void readStudent(Reader *reader);
+
 #endif // LIST_H_INCLUDED

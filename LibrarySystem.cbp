@@ -31,6 +31,26 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="LibraryBook.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="LibraryBook.h" />
+		<Unit filename="List.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="List.h" />
+		<Unit filename="Menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Menu.h" />
+		<Unit filename="Reader.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Reader.h" />
+		<Unit filename="Tree.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Tree.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

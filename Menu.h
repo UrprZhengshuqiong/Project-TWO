@@ -2,8 +2,9 @@
 #define MENU_H_INCLUDED
 #include "Tree.h"
 #include "List.h"
+#include "LibraryBook.h"
 
-void begin(Node *head,Reader *reader);
+void Begin(Node *head,Reader *reader);
 
 int ExiorNot3;
 
@@ -13,9 +14,8 @@ int ExiorNot5;
 
 int ExiorNot6;
 
-int MaxAdd = -1;
+int MaxAdd;
 
 int numbers;
-
 
 #endif // MENU_H_INCLUDED

@@ -4,7 +4,7 @@
 #include "Tree.h"
 #include "List.h"
 
-void begin(Node *head,Reader *reader)
+void Begin(Node *head,Reader *reader)
 {
     int choice;
     int door = 0;
@@ -26,7 +26,7 @@ void begin(Node *head,Reader *reader)
             printf("    |--------------------------------------------------------------------------------------------|\n");
             printf("    |                          For student                                                       |\n");
             printf("    |--------------------------------------------------------------------------------------------|\n");
-            printf("    |Please choose what you want£º(select number)                                                |\n");
+            printf("    |Please choose what you wantÂ£Âº(select number)                                                |\n");
             printf("    |--------------------------------------------------------------------------------------------|\n");
             printf("    |1.Register with the library.                                                                |\n");
             printf("    |2.List all books.                                                                           |\n");
@@ -137,7 +137,7 @@ void begin(Node *head,Reader *reader)
             printf("    |--------------------------------------------------------------------------------------------|\n");
             printf("    |                            For staff                                                       |\n");
             printf("    |--------------------------------------------------------------------------------------------|\n");
-            printf("    |Please choose what you want£º(select number)                                                |\n");
+            printf("    |Please choose what you wantÂ£Âº(select number)                                                |\n");
             printf("    |--------------------------------------------------------------------------------------------|\n");
             printf("    |1.List all books.                                                                           |\n");
             printf("    |2.List all registered users.                                                                |\n");
@@ -177,7 +177,7 @@ void begin(Node *head,Reader *reader)
                 char Abook[50];
                 scanf("%s",Abook);
 
-                printf("    |Please make sure you want to add ¡¶%s¡· book\n",Abook);
+                printf("    |Please make sure you want to add ã€Š%sã€‹book\n",Abook);
                 printf("    |Please enter number 1 for yes ,number 2 for no,and any wrong number will return to the menu. \n");
 
                 int choice3;
@@ -198,7 +198,7 @@ void begin(Node *head,Reader *reader)
                 char Rbook[50];
                 scanf("%s",Rbook);
 
-                printf("    |Please make sure you want to remove ¡¶%s¡· book\n",Rbook);
+                printf("    |Please make sure you want to remove Â¡Â¶%sÂ¡Â· book\n",Rbook);
                 printf("    |Please enter number 1 for yes ,number 2 for no,and any wrong number will return to the menu. \n");
 
                 int choice4;

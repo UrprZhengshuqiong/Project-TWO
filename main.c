@@ -19,7 +19,7 @@ int main( int argc, char **argv ){
 
   readStudent(reader);
 
-  begin(head,reader);
+  Begin(head,reader);
 
   return 0;
 
