@@ -26,7 +26,7 @@ void Begin(Node *head,Reader *reader)
             printf("    |--------------------------------------------------------------------------------------------|\n");
             printf("    |                          For student                                                       |\n");
             printf("    |--------------------------------------------------------------------------------------------|\n");
-            printf("    |Please choose what you want£º(select number)                                                |\n");
+            printf("    |Please choose what you want:(select number)                                                |\n");
             printf("    |--------------------------------------------------------------------------------------------|\n");
             printf("    |1.Register with the library.                                                                |\n");
             printf("    |2.List all books.                                                                           |\n");

@@ -21,7 +21,7 @@ void printList(Reader* pMove)
        printList(pMove->next);
        printf("    |");
        printf("%s        %10s",pMove->Studentnum,pMove->Studentname,pMove->Collegename,pMove->booksrentindex,pMove->booksrentname);
-       printf("%25s        %s        《%s》\n",pMove->Collegename,pMove->booksrentindex,pMove->booksrentname);
+       printf("%25s        %s        '%s' \n",pMove->Collegename,pMove->booksrentindex,pMove->booksrentname);
        printf("    |--------------------------------------------------------------------------------------------|\n");
     }
 }

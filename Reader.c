@@ -8,7 +8,7 @@ void StudentRegister(Reader*reader)
             printf("    |--------------------------------------------------------------------------------------------|\n");
             printf("    |                           Student Register                                                 |\n");
             printf("    |--------------------------------------------------------------------------------------------|\n");
-            printf("    |Please input your informations£º(as shown below)                                            |\n");
+            printf("    |Please input your informations:(as shown below)                                            |\n");
             printf("    |--------------------------------------------------------------------------------------------|\n");
 
             int choice;

@@ -51,12 +51,12 @@ void Searchforbooks(Node *node,char * book)
             if(node->child[i]->borrow == 1 && (strcmp(node->child[i]->booksname,book) == 0))
             {
                  ExiorNot3 = 1;
-                 printf("    |The book ¡¶%s¡· you have reviewed : retain                                                 |\n",node->child[i]->booksname);
+                 printf("    |The book '%s' you have reviewed : retain                                                 |\n",node->child[i]->booksname);
             }
             else if(node->child[i]->borrow == 0 && (strcmp(node->child[i]->booksname,book) == 0))
             {
                  ExiorNot3 = 1;
-                 printf("    |The book 《%s》 you have reviewed : Already loaned out.                                    |\n",node->child[i]->booksname);
+                 printf("    |The book '%s' you have reviewed : Already loaned out.                                    |\n",node->child[i]->booksname);
             }
         }
     }
@@ -81,8 +81,8 @@ void Borrowingbooks(Node *node,char * Bbook)
              {
                 ExiorNot4 = 1;
 
-                printf("    |The book 《%s》 you have reviewed : retain                                                  |\n",node->child[i]->booksname);
-                printf("    |Please determine if you want to borrow ¡¶%s¡·,Please enter( 1(yes)/ 0(no) )                 |\n",node->child[i]->booksname);
+                printf("    |The book '%s' you have reviewed : retain                                                  |\n",node->child[i]->booksname);
+                printf("    |Please determine if you want to borrow '%s' ,Please enter( 1(yes)/ 0(no) )                 |\n",node->child[i]->booksname);
 
                 int answer;
                 scanf("%d",&answer);
@@ -92,7 +92,7 @@ void Borrowingbooks(Node *node,char * Bbook)
                   if(answer == 1)
                   {
                       node->child[i]->borrow = 0;
-                      printf("    |successfully: 《%s》                                                                        \n",node->child[i]->booksname);
+                      printf("    |successfully: '%s'                                                                        \n",node->child[i]->booksname);
                       printf("    |You have successfully borrowed this book, please go to the window to take out the book.     \n");
 
                       break;
@@ -116,7 +116,7 @@ void Borrowingbooks(Node *node,char * Bbook)
              else if(node->child[i]->borrow == 0 && (strcmp(node->child[i]->booksname,Bbook) == 0))
              {
                   ExiorNot4 = 1;
-                  printf("    |Sorry: The book 《%s》 you have reviewed : Already loaned out.                                   |\n",node->child[i]->booksname);
+                  printf("    |Sorry: The book '%s' you have reviewed : Already loaned out.                                   |\n",node->child[i]->booksname);
              }
 
         }
@@ -140,7 +140,7 @@ void ReturnaBook(Node *node,char * Rbook)
             if(node->child[i]->borrow == 0 && strcmp(node->child[i]->booksname,Rbook) == 0)
             {
                 ExiorNot5 = 1;
-                printf("    |The book 《%s》 you want to return, status : Already loaned out.                           |\n",node->child[i]->booksname);
+                printf("    |The book '%s' you want to return, status : Already loaned out.                           |\n",node->child[i]->booksname);
                 printf("    |Please put the book in the return window:                                                  |\n");
                 printf("    |Please make sure that you have already placed the book in the recycling window.(1/yes and 0/no.)\n");
 
@@ -151,7 +151,7 @@ void ReturnaBook(Node *node,char * Rbook)
                   if(reanswer == 1)
                   {
                       node->child[i]->borrow = 1;
-                      printf("    |successfully: 《%s》                                                                        \n",node->child[i]->booksname);
+                      printf("    |successfully: '%s'                                                                        \n",node->child[i]->booksname);
                       printf("    |You have successfully return this book.                                                     \n");
 
                       break;
@@ -172,7 +172,7 @@ void ReturnaBook(Node *node,char * Rbook)
             }
             else if(node->child[i]->borrow == 1 && (strcmp(node->child[i]->booksname,Rbook) == 0))
             {
-                 printf("    |Error : This book 《%s》has not been lent, please enter the correct title:                                \n",node->child[i]->booksname);
+                 printf("    |Error : This book '%s' has not been lent, please enter the correct title:                                \n",node->child[i]->booksname);
             }
         }
     }
@@ -205,7 +205,7 @@ void  Addbooks(Node * node,char * Abook)
             }
             else if(strcmp(node->child[i]->booksname,Abook) == 0 && ExiorNot6 == -1)
             {
-                printf("    |Error : The name of the book 《%s》 coincides with the name of another book.",Abook);
+                printf("    |Error : The name of the book '%s' coincides with the name of another book.",Abook);
                 printf("We will use different numbers to distinguish it.\n");
                 printf("    |Of course, I also hope that you will consider whether to change part of the name to maintain the discrimination of the book.\n");
                 printf("    |Choose :Select number 1 - I still want to use the same name:\n");
