@@ -13,6 +13,13 @@ int main( int argc, char **argv ){
 
   head = makeNode( 0.0,0.0, 0 );
 
+  int i;
+
+  for(i = 0;i < 2;i++)
+  {
+     growtree(head);
+  }
+
   readLibrary(head);
 
   Reader* reader = createList();

@@ -17,10 +17,12 @@ void Listallbook(Node *node)
         {
            Listallbook(node->child[i]);
 
-           if(node->child[i]->borrow == 1 ||node->child[i]->borrow == 0)
+           if(node->child[i]->borrow == 1 || node->child[i]->borrow == 0 || node->child[i]->borrow == -1)
+           //if(node->child[i]->borrow == 1 || node->child[i]->borrow == 0)
            {
                printf("    |");
                printf("%4d        %-40s ",node->child[i]->booksindex,node->child[i]->booksname);
+               printf("%-20s",node->child[i]->authorname);
 
                if(node->child[i]->borrow == 1)
                {
@@ -28,10 +30,24 @@ void Listallbook(Node *node)
                }
                else
                {
-                      printf("Already loaned out.    |\n");
+                      printf("Already loaned out!    |\n");
                }
-               printf("    |----------------------------------------------------------------------------|\n");
+               printf("    |------------------------------------------------------------------------------------------------|\n");
            }
+           else if(strcmp(node->child[i]->authorname,"SmallCategories") == 0)
+           {
+                printf("    |%s: %s\n",node->child[i]->authorname,node->child[i]->booksname);
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+           }
+           /*
+           else if(strcmp(node->child[i]->authorname,"BigCategories") == 0)
+           {
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |                                    %s\n",node->child[i]->authorname);
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+           }
+           */
         }
     }
 }

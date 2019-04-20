@@ -8,7 +8,8 @@ struct qnode{
 
 
   int booksindex;      //book Index
-  char booksname[50]; //book name
+  char booksname[50];  //book name
+  char authorname[50]; //author name
   int borrow;
 };
 
@@ -26,8 +27,9 @@ void printOut( FILE *fp, Node *node );
 
 void growtree(Node *node);
 
-//W/R from the library
-int RemoveBooksNum;
+char BigCategories[30][50];
+
+extern int RemoveBooksNum;
 
 int judge(int numbers);
 
@@ -39,5 +41,8 @@ void WriteLibrary(Node* node);
 
 void cyclewrite(FILE *fp, Node *node);
 
+void initialBuild(int LevelNumber[50],Node *node,int tempnumber);
+
+void setlable(Node *head);
 
 #endif // TREE_H_INCLUDED

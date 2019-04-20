@@ -58,7 +58,7 @@ void writeList(Reader *pmove,FILE *fp2)
 
 void readStudent(Reader *reader)
 {
-    FILE *fp=fopen("Students.txt","r");
+    FILE *fp=fopen("data/Students.txt","r");
     if(!fp)
     {
         printf("open error");
@@ -77,14 +77,14 @@ void readStudent(Reader *reader)
 		strcpy(pnew->Collegename, c);
         strcpy(pnew->booksrentindex, d);
 		strcpy(pnew->booksrentname, e);
-
+/*
         printf("Welcome readStudent().\n");
         printf("pnew->Studentnum = %s\n",pnew->Studentnum);
         printf("pnew->Studentname = %s\n",pnew->Studentname);
         printf("pnew->Studentname = %s\n",pnew->Collegename);
         printf("pnew->booksrentindex = %s\n",pnew->booksrentindex);
         printf("pnew->booksrentname = %s\n\n",pnew->booksrentname);
-
+*/
 		pnew->next = reader->next;
 		reader->next = pnew;
     }

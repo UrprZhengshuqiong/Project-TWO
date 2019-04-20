@@ -3,10 +3,35 @@
 #include "Tree.h"
 #include "Menu.h"
 
+int RemoveBooksNum;
+
+int entrance;
+
+int MiniClassification;
+
+void setlable(Node *node)
+{
+  int i;
+  if(node->child[0] == NULL)
+  {
+     strcpy(node->authorname,"ClassBoundary");
+     return;
+  }
+  else
+  {
+     for(i = 0;i < 4;i++)
+     {
+        setlable(node->child[i]);
+     }
+  }
+
+}
+
 int judge(int numbers)
 {
     int level;
     int maxnumber;
+
     if(numbers <= 84)
     {
        level = 3;
@@ -49,19 +74,43 @@ int judge(int numbers)
     }
 
     MaxAdd = maxnumber - numbers;
-
-    printf("MaxAdd = %d",MaxAdd);
     return level;
+}
+
+void growtree(Node *node)
+{
+  int i;
+  if(node->child[0] == NULL){
+     makeChildren(node);
+     return;
+  }
+  else{
+     for(i = 0;i < 4;i++)
+     {
+        growtree(node->child[i]);
+     }
+  }
 }
 
 void readLibrary(Node *node)
 {
-    int a,c;
-    char b;
+    int a;
+    int c;
+    char b[20],d[50];
+    char delims[] = ",";
 
-	FILE *fp = fopen("Library.txt", "r");
+    int LevelNumber[50];
+    int i = 0,j = 0;
 
-	if (!fp)
+    int tempnumber = 0;
+
+    entrance = 1;
+
+    MiniClassification = 1;
+
+	FILE *fp = fopen("data/ClassificationLibrary.txt", "r");
+
+	if(!fp)
 	{
 		printf("open error");
 		return;
@@ -69,33 +118,76 @@ void readLibrary(Node *node)
 	else
 	{
 	    fscanf(fp,"%d %s %d",&a,&b,&c);
+        fscanf(fp,"\n%[^\n]",&d);
 
-        printf("number = %d\n",c);
+        char *result = NULL;
 
-        numbers = c;
+        result = strtok(d,delims);
 
-	    int i = 0;
-
-        int level = judge(numbers);
-
-        printf("level = %d\n",level);
-
-        for(i = 0;i < level;i++)
+        while( result != NULL )
         {
-            growtree(node);
+           LevelNumber[i] = atoi(result);   //function'atoi' let string->integer
+
+           result = strtok(NULL,delims);
+           i++;
         }
 
-		cycleread(fp,node);
+        for(i = 0;i < 4;i++)
+        {
+           initialBuild(LevelNumber,node->child[i],tempnumber);
+           tempnumber += 4;
+        }
+
+        int temp = 0;
+        for(i = 0;i < 4;i++)
+        {
+            for(j = 0;j < 4;j++)
+            {
+                fscanf(fp,"%d %s %d",&a,&b,&c);
+                fscanf(fp,"\n%[^\n]",&d);
+
+                strcpy(BigCategories[temp],d);
+
+                cycleread(fp,node ->child[i]->child[j]);
+
+                entrance = 1;
+
+                temp++;
+            }
+        }
 	}
     fclose(fp);
 }
+
+void initialBuild(int LevelNumber[50],Node *node,int tempnumber)
+{
+    int i,j;
+    for(i = 0;i < 4;i++)
+    {
+        tempnumber++;
+
+        int level = judge(LevelNumber[tempnumber]);
+
+        for(j = 0;j < level;j++)
+        {
+            growtree(node->child[i]);
+            if(j == 0)
+            {
+               setlable(node->child[i]);
+            }
+        }
+    }
+}
+
 
 void cycleread(FILE *fp, Node *node)
 {
   int i;
   int a;
-  char b[20];
+  char b[50];
+  char d[50];
   int c;
+
   if(node->child[0] == NULL)
   {
      return;
@@ -105,25 +197,61 @@ void cycleread(FILE *fp, Node *node)
      for(i = 0;i < 4;i++)
      {
               cycleread(fp,node->child[i]);
-              if((fscanf(fp,"%d %s %d",&a,&b,&c))!=EOF)
-              {
-                  node->child[i]->booksindex = a;
-                  strcpy(node->child[i]->booksname,b);
-                  node->child[i]->borrow = c;
 
-                  //printf("node->child[i]->booksindex:%d\n",node->child[i]->booksindex);
+                    if(entrance == 1 && MiniClassification == 1 && fscanf(fp,"%d %s %d",&a,&b,&c) != EOF)
+                    {
+                          fscanf(fp,"\n%[^\n]",&d);
 
-                  //printf("node->child[i]->booksname:%s\n",node->child[i]->booksname);
+                          if(strcmp(b,"@endBigCategories") == 0)
+                          {
+                              entrance = 0;
+                          }
+                          else if(strcmp(b,"@endSmallCategories") == 0)
+                          {
+                               MiniClassification = 0;
+                          }
+                          else
+                          {
+                               node->child[i]->booksindex = a;
+                               strcpy(node->child[i]->authorname,b);
+                               node->child[i]->borrow = c;
+                               strcpy(node->child[i]->booksname,d);
+
+                               if(strcmp(b,"SmallCategories") == 0)
+                               {
+
+                                   printf("node->child[i]->Index:%d\n",node->child[i]->booksindex);
+                                   printf("Books categories:%s\n",node->child[i]->authorname);
+                                   printf("Books totalNumber: %d\n\n",node->child[i]->borrow);
+
+                               }
+                               else
+                               {
+
+                                    printf("node->child[i]->booksindex:%d\n",node->child[i]->booksindex);
+                                    printf("node->child[i]->booksname:%s\n",node->child[i]->booksname);
+                                    printf("node->child[i]->authorname:%s\n",node->child[i]->authorname);
+                                    printf("node->child[i]->borrow: %d\n\n",node->child[i]->borrow);
+
+                               }
+                          }
+                    }
+
+                    if(strcmp(node->child[i]->authorname,"ClassBoundary") == 0)
+                    {
+                        MiniClassification = 1;
+                    }
+
               }
-        }
-     }
+       }
 }
+
 
 void WriteLibrary(Node* node)
 {
     FILE *fp1=fopen("Library.txt","w");
     int i = 0;
-    char * name = "Í¼Êé×ÜÁ¿";
+    char * name = "TotalAmount";
 
     if (!fp1)
 	{
@@ -164,6 +292,7 @@ void cyclewrite(FILE *fp1, Node *node)
     }
 
 }
+
 //Old tree build
 Node *makeNode( double x, double y, int level ) {
 
@@ -244,18 +373,3 @@ void printOut( FILE *fp, Node *node ) {
   return;
 }
 
-
-void growtree(Node *node)
-{
-  int i;
-  if(node->child[0] == NULL){
-     makeChildren(node);
-     return;
-  }
-  else{
-     for(i = 0;i < 4;i++)
-     {
-        growtree(node->child[i]);
-     }
-  }
-}
