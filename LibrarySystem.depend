@@ -69,7 +69,7 @@
 	"Tree.h"
 	"List.h"
 
-1555669028 c:\users\萨利酱\desktop\study\project two\librarysystem\tree.h
+1555924065 c:\users\萨利酱\desktop\study\project two\librarysystem\tree.h
 
 1555395008 source:c:\users\萨利酱\desktop\study\project two\librarysystem\reader.c
 	"stdio.h"
@@ -77,22 +77,22 @@
 	"Reader.h"
 	"List.h"
 
-1555669981 source:c:\users\萨利酱\desktop\study\project two\librarysystem\tree.c
+1555926343 source:c:\users\萨利酱\desktop\study\project two\librarysystem\tree.c
 	"stdio.h"
 	"stdlib.h"
 	"Tree.h"
 	"Menu.h"
 
-1555468535 c:\users\萨利酱\desktop\study\project two\librarysystem\menu.h
+1555851692 c:\users\萨利酱\desktop\study\project two\librarysystem\menu.h
 	"Tree.h"
 	"List.h"
 	"LibraryBook.h"
 
-1554544999 c:\users\萨利酱\desktop\study\project two\librarysystem\librarybook.h
+1555893104 c:\users\萨利酱\desktop\study\project two\librarysystem\librarybook.h
 	"Tree.h"
 	"List.h"
 
-1555662856 source:c:\users\萨利酱\desktop\study\project two\librarysystem\librarybook.c
+1555924077 source:c:\users\萨利酱\desktop\study\project two\librarysystem\librarybook.c
 	"stdio.h"
 	"stdlib.h"
 	"LibraryBook.h"
@@ -108,10 +108,11 @@
 	"Menu.h"
 	"Reader.h"
 
-1555734212 source:c:\users\萨利酱\desktop\study\project two\librarysystem\menu.c
+1555924065 source:c:\users\萨利酱\desktop\study\project two\librarysystem\menu.c
 	"stdio.h"
 	"stdlib.h"
 	"Menu.h"
 	"Tree.h"
 	"List.h"
+	"math.h"
 

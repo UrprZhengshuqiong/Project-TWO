@@ -10,7 +10,7 @@ void Searchforbooks(Node *node,char * book);
 
 void Borrowingbooks(Node *node,char * Bbook);
 
-void RemoveBooks(Node * node,char * Mbook);
+void  RemoveBooks(Node * node,int Index,int temptry);
 
 void ReturnaBook(Node *node,char * Rbook);
 

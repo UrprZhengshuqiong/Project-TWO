@@ -3,8 +3,6 @@
 #include "Tree.h"
 #include "Menu.h"
 
-int RemoveBooksNum;
-
 int entrance;
 
 int MiniClassification;
@@ -30,9 +28,15 @@ void setlable(Node *node)
 int judge(int numbers)
 {
     int level;
+
     int maxnumber;
 
-    if(numbers <= 84)
+    if(numbers <= 20 && numbers >= 0)
+    {
+       level = 2;
+       maxnumber = 20;
+    }
+    else if( numbers > 20 && numbers <= 84)
     {
        level = 3;
        maxnumber = 84;
@@ -74,15 +78,19 @@ int judge(int numbers)
     }
 
     MaxAdd = maxnumber - numbers;
+
     return level;
 }
 
 void growtree(Node *node)
 {
   int i;
-  if(node->child[0] == NULL){
+  if(node->child[0] == NULL)
+  {
      makeChildren(node);
+
      return;
+
   }
   else{
      for(i = 0;i < 4;i++)
@@ -96,10 +104,9 @@ void readLibrary(Node *node)
 {
     int a;
     int c;
-    char b[20],d[50];
+    char b[20],d[200];
     char delims[] = ",";
 
-    int LevelNumber[50];
     int i = 0,j = 0;
 
     int tempnumber = 0;
@@ -128,17 +135,28 @@ void readLibrary(Node *node)
         {
            LevelNumber[i] = atoi(result);   //function'atoi' let string->integer
 
+           printf("LevelNumber[%d] = %d\n",i,LevelNumber[i]);
+
            result = strtok(NULL,delims);
+
            i++;
         }
 
-        for(i = 0;i < 4;i++)
+        for(i = 0;i < 16;i++)
         {
-           initialBuild(LevelNumber,node->child[i],tempnumber);
+            int x = i / 4;
+            int y = i % 4;
+
+            //printf("x = %d\n",x);
+            //printf("y = %d\n",y);
+
+           initialBuild(LevelNumber,node->child[x]->child[y],tempnumber);
+
            tempnumber += 4;
         }
 
         int temp = 0;
+
         for(i = 0;i < 4;i++)
         {
             for(j = 0;j < 4;j++)
@@ -159,24 +177,58 @@ void readLibrary(Node *node)
     fclose(fp);
 }
 
-void initialBuild(int LevelNumber[50],Node *node,int tempnumber)
+void initialBuild(int LevelNumber[100],Node *node,int tempnumber)
 {
     int i,j;
+    int Maxtemplevel = judge(LevelNumber[tempnumber]);
+
     for(i = 0;i < 4;i++)
     {
         tempnumber++;
 
         int level = judge(LevelNumber[tempnumber]);
 
-        for(j = 0;j < level;j++)
+        if(level > Maxtemplevel)
         {
-            growtree(node->child[i]);
-            if(j == 0)
-            {
-               setlable(node->child[i]);
-            }
+            Maxtemplevel = level;
+        }
+
+        for(j = 0;j < Maxtemplevel;j++)
+        {
+            growtree(node);
+        }
+        strcpy(node->child[i]->authorname,"ClassBoundary");
+    }
+
+    /*
+    int templevel = judge(LevelNumber[tempnumber]);
+
+    for(i = 0;i < 3;i++)
+    {
+        tempnumber++;
+
+        int level = judge(LevelNumber[tempnumber + 1]);
+
+        if(level > templevel)
+        {
+            templevel = level;
         }
     }
+     printf("templevel = %d\n",templevel);
+
+     for(j = 0;j < templevel + 1;j++)
+     {
+            if(j == 0)
+            {
+               setlable(node);
+            }
+
+            growtree(node);
+
+            printf("node->authorname = %s\n",node->authorname);
+     }
+     */
+    return;
 }
 
 
@@ -234,6 +286,7 @@ void cycleread(FILE *fp, Node *node)
                                     printf("node->child[i]->borrow: %d\n\n",node->child[i]->borrow);
 
                                }
+
                           }
                     }
 
@@ -260,7 +313,7 @@ void WriteLibrary(Node* node)
 	}
 	else
 	{
-	    fprintf(fp1,"%d %s %d\n",i,name,numbers - RemoveBooksNum);
+	    //fprintf(fp1,"%d %s %d\n",i,name,numbers - RemoveBooksNum);
 		cyclewrite(fp1,node);
 	}
     fclose(fp1);
@@ -317,7 +370,6 @@ Node *makeNode( double x, double y, int level ) {
 
 
 void makeChildren( Node *parent ) {
-
   double x = parent->xy[0];
   double y = parent->xy[1];
 
