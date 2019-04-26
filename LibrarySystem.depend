@@ -57,49 +57,55 @@
 	"Reader.h"
 	"List.h"
 
-1555481955 source:c:\users\萨利酱\desktop\study\project two\librarysystem\list.c
+1556267390 source:c:\users\萨利酱\desktop\study\project two\librarysystem\list.c
 	"stdio.h"
 	"stdlib.h"
 	"List.h"
 	"Reader.h"
+	"string.h"
 
-1554545465 c:\users\萨利酱\desktop\study\project two\librarysystem\list.h
+1556184314 c:\users\萨利酱\desktop\study\project two\librarysystem\list.h
 
-1554545465 c:\users\萨利酱\desktop\study\project two\librarysystem\reader.h
+1556175427 c:\users\萨利酱\desktop\study\project two\librarysystem\reader.h
 	"Tree.h"
 	"List.h"
 
-1555924065 c:\users\萨利酱\desktop\study\project two\librarysystem\tree.h
+1556203970 c:\users\萨利酱\desktop\study\project two\librarysystem\tree.h
 
-1555395008 source:c:\users\萨利酱\desktop\study\project two\librarysystem\reader.c
+1556267390 source:c:\users\萨利酱\desktop\study\project two\librarysystem\reader.c
 	"stdio.h"
 	"stdlib.h"
 	"Reader.h"
 	"List.h"
+	"Menu.h"
+	"string.h"
 
-1555926343 source:c:\users\萨利酱\desktop\study\project two\librarysystem\tree.c
+1556267390 source:c:\users\萨利酱\desktop\study\project two\librarysystem\tree.c
 	"stdio.h"
 	"stdlib.h"
 	"Tree.h"
 	"Menu.h"
+	"string.h"
 
-1555851692 c:\users\萨利酱\desktop\study\project two\librarysystem\menu.h
+1556182048 c:\users\萨利酱\desktop\study\project two\librarysystem\menu.h
 	"Tree.h"
 	"List.h"
 	"LibraryBook.h"
+	"HistoricalRec.h"
 
-1555893104 c:\users\萨利酱\desktop\study\project two\librarysystem\librarybook.h
+1556238064 c:\users\萨利酱\desktop\study\project two\librarysystem\librarybook.h
 	"Tree.h"
 	"List.h"
 
-1555924077 source:c:\users\萨利酱\desktop\study\project two\librarysystem\librarybook.c
+1556267434 source:c:\users\萨利酱\desktop\study\project two\librarysystem\librarybook.c
 	"stdio.h"
 	"stdlib.h"
 	"LibraryBook.h"
 	"Tree.h"
 	"Menu.h"
+	"string.h"
 
-1555667869 source:c:\users\萨利酱\desktop\study\project two\librarysystem\main.c
+1556267524 source:c:\users\萨利酱\desktop\study\project two\librarysystem\main.c
 	"stdio.h"
 	"stdlib.h"
 	"math.h"
@@ -107,12 +113,37 @@
 	"LibraryBook.h"
 	"Menu.h"
 	"Reader.h"
+	"HistoricalRec.h"
+	"string.h"
 
-1555924065 source:c:\users\萨利酱\desktop\study\project two\librarysystem\menu.c
+1556267325 source:c:\users\萨利酱\desktop\study\project two\librarysystem\menu.c
 	"stdio.h"
 	"stdlib.h"
 	"Menu.h"
 	"Tree.h"
 	"List.h"
 	"math.h"
+	"HistoricalRec.h"
+	"HistoricalList.h"
+	"Reader.h"
+	"string.h"
+
+1556265894 source:c:\users\萨利酱\desktop\study\project two\librarysystem\historicalrec.c
+	"stdio.h"
+	"stdlib.h"
+	"HistoricalRec.h"
+	"time.h"
+	"string.h"
+
+1556177448 c:\users\萨利酱\desktop\study\project two\librarysystem\historicalrec.h
+	"HistoricalList.h"
+
+1556254909 source:c:\users\萨利酱\desktop\study\project two\librarysystem\historicallist.c
+	"stdio.h"
+	"stdlib.h"
+	"HistoricalList.h"
+	"HistoricalRec.h"
+	"string.h"
+
+1556176585 c:\users\萨利酱\desktop\study\project two\librarysystem\historicallist.h
 

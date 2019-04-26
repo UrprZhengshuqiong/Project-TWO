@@ -3,7 +3,23 @@
 #include "LibraryBook.h"
 #include "Tree.h"
 #include "Menu.h"
+#include "string.h"
 
+int Addbookstemp;
+
+extern int ExiorNot3;
+
+extern int ExiorNot4;
+
+extern int ExiorNot5;
+
+extern int ExiorNot6;
+
+extern int LevelNumber[50];
+
+extern int MaxAdd;
+
+/**list all the books of the child nodes contained in the incoming node**/
 void Listallbook(Node *node)
 {
     int i;
@@ -43,6 +59,7 @@ void Listallbook(Node *node)
     }
 }
 
+/**Search for books**/
 void Searchforbooks(Node *node,char * book)
 {
     int i;
@@ -55,6 +72,7 @@ void Searchforbooks(Node *node,char * book)
         for(i=0; i<4; i++)
         {
             Searchforbooks(node->child[i],book);
+
             if(node->child[i]->borrow == 1 && (strcmp(node->child[i]->booksname,book) == 0))
             {
                  ExiorNot3 = 1;
@@ -74,7 +92,8 @@ void Searchforbooks(Node *node,char * book)
 
 }
 
-void Borrowingbooks(Node *node,char * Bbook)
+/**Borrowing books**/
+void Borrowingbooks(Node *node,char * Bbook,int BookRentNum)
 {
     int i;
     int temp = -1;
@@ -86,7 +105,7 @@ void Borrowingbooks(Node *node,char * Bbook)
     {
         for(i=0; i<4; i++)
         {
-              Borrowingbooks(node->child[i],Bbook);
+              Borrowingbooks(node->child[i],Bbook,BookRentNum);
 
              if(node->child[i]->borrow == 1 && (strcmp(node->child[i]->booksname,Bbook) == 0))
              {
@@ -99,41 +118,52 @@ void Borrowingbooks(Node *node,char * Bbook)
                 printf("    |------------------------------------------------------------------------------------------------|\n");
 
                 int answer;
+
                 scanf("%d",&answer);
 
                 do
                 {
-                  if(answer == 1)
+                  if(BookRentNum < 3 && BookRentNum >= 0)
                   {
-                      node->child[i]->borrow = 0;
+                       if(answer == 1 )
+                       {
+                          node->child[i]->borrow = 0;
 
-                      printf("    |------------------------------------------------------------------------------------------------|\n");
-                      printf("    |successfully: <<%s>>                                                                        \n",node->child[i]->booksname);
-                      printf("    |------------------------------------------------------------------------------------------------|\n");
-                      printf("    |You have successfully borrowed this book, please go to the window to take out the book.     \n");
-                      printf("    |------------------------------------------------------------------------------------------------|\n");
+                          ExiorNot4 = 2;
 
+                          break;
+                        }
+                          else if(answer == 0)
+                          {
+                              printf("    |------------------------------------------------------------------------------------------------|\n");
+                              printf("    |The system is about to exit this option interface.........                                   \n");
+                              printf("    |------------------------------------------------------------------------------------------------|\n");
+                              system("pause");
+
+                              break;
+                          }
+                          else
+                          {
+                              printf("    |------------------------------------------------------------------------------------------------|\n");
+                              printf("    |Error : Please enter the correct character, number 1 for yes and number 0 for no.                         \n");
+                              printf("    |------------------------------------------------------------------------------------------------|\n");
+
+                              temp = 1;
+
+                              fflush(stdin);
+
+                              scanf("%d",&answer);
+                          }
+                   }
+
+                   else
+                   {
+                      printf("    |------------------------------------------------------------------------------------------------|\n");
+                      printf("    |Error : The number of books you can borrow has reached the limit.                               |\n");
+                      printf("    |------------------------------------------------------------------------------------------------|\n");
                       break;
+                   }
 
-                  }
-                  else if(answer == 0)
-                  {
-                      printf("    |------------------------------------------------------------------------------------------------|\n");
-                      printf("    |The system is about to exit this option interface.........                                   \n");
-                      printf("    |------------------------------------------------------------------------------------------------|\n");
-                      system("pause");
-                      break;
-                  }
-                  else
-                  {
-                      printf("    |------------------------------------------------------------------------------------------------|\n");
-                      printf("    |Error : Please enter the correct character, number 1 for yes and number 0 for no.                         \n");
-                      printf("    |------------------------------------------------------------------------------------------------|\n");
-
-                      temp = 1;
-                      fflush(stdin);
-                      scanf("%d",&answer);
-                  }
                 }while(temp == 1);
              }
 
@@ -150,7 +180,7 @@ void Borrowingbooks(Node *node,char * Bbook)
     }
 
 }
-
+/**Return a Book**/
 void ReturnaBook(Node *node,char * Rbook)
 {
     int i;
@@ -164,9 +194,11 @@ void ReturnaBook(Node *node,char * Rbook)
         for(i=0; i<4; i++)
         {
             ReturnaBook(node->child[i],Rbook);
+
             if(node->child[i]->borrow == 0 && strcmp(node->child[i]->booksname,Rbook) == 0)
             {
                 ExiorNot5 = 1;
+
                 printf("    |------------------------------------------------------------------------------------------------|\n");
                 printf("    |The book <<%s>> you want to return, status : Already loaned out.        \n",node->child[i]->booksname);
                 printf("    |------------------------------------------------------------------------------------------------|\n");
@@ -179,6 +211,7 @@ void ReturnaBook(Node *node,char * Rbook)
                 {
                   int reanswer;
                   scanf("%d",&reanswer);
+
                   if(reanswer == 1)
                   {
                       node->child[i]->borrow = 1;
@@ -187,6 +220,8 @@ void ReturnaBook(Node *node,char * Rbook)
                       printf("    |------------------------------------------------------------------------------------------------|\n");
                       printf("    |You have successfully return this book.                                                         |\n");
                       printf("    |------------------------------------------------------------------------------------------------|\n");
+
+                      ExiorNot5 = 2;
 
                       break;
 
@@ -220,27 +255,33 @@ void ReturnaBook(Node *node,char * Rbook)
     }
 }
 
-void  Addbooks(Node * node,char * Abook)
+/**Add new book information to the library**/
+void  Addbooks(Node * node,char * Abook,char * authorName,int temptry)
 {
     int i;
-    int temp = -1;
     if( node->child[0] == NULL )
     {
         if(strcmp(node->authorname,"SmallCategories") == 0)
         {
-            node->borrow += 1;
+            int index = node->booksindex;
 
-            //build tree
-            /*
-            int totalAdd =
+            index /= 10;
 
-            if(node->borrow == )
+            judge(LevelNumber[index - 1]);
+
+            if(node->borrow == MaxAdd)
             {
+                 printf("    |------------------------------------------------------------------------------------------------|\n");
+                 printf("    |Soory : This system only supports adding %d books in small classes",MaxAdd);
+                 printf("    |------------------------------------------------------------------------------------------------|\n");
+                 printf("    |Please restart the system to add again.                                                         |\n");
+                 printf("    |------------------------------------------------------------------------------------------------|\n");
+            }
+            else
+            {
+                Addbookstemp = node->borrow;
 
             }
-            */
-
-            printf("node->booksname:%s,node->borrow:%d\n",node->booksname,node->borrow);
         }
        return;
     }
@@ -248,28 +289,41 @@ void  Addbooks(Node * node,char * Abook)
     {
         for(i=0; i<4; i++)
         {
-            Addbooks(node->child[i],Abook);
+            Addbooks(node->child[i],Abook,authorName,temptry);
 
             if(node->child[i]->borrow == -1 && ExiorNot6 == -1)
             {
                 ExiorNot6 = 1;
-                //MaxAdd -= 1;
-                numbers++;
 
-                node->child[i]->booksindex = numbers;
+                node->child[i]->booksindex = Addbookstemp + 1;
 
                 strcpy(node->child[i]->booksname,Abook);
 
+                strcpy(node->child[i]->authorname,authorName);
+
                 node->child[i]->borrow = 1;
+
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |Successful.you have successfully added <<%s>> book\n",node->child[i]->booksname);
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+
+                LevelNumber[temptry -1] = LevelNumber[temptry -1] + 1;
+
             }
             else if(strcmp(node->child[i]->booksname,Abook) == 0 && ExiorNot6 == -1)
             {
-                printf("    |Error : The name of the book '%s' coincides with the name of another book.",Abook);
-                printf("We will use different numbers to distinguish it.\n");
-                printf("    |Of course, I also hope that you will consider whether to change part of the name to maintain the discrimination of the book.\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |Error : The name of the book <<%s>> coincides with the name of another book.\n",Abook);
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |1. Use different 'Book Index' to distinguish it.                                                |\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |2. Change part of the name to maintain the discrimination of the book.                          |\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n");
                 printf("    |Choose :Select number 1 - I still want to use the same name:\n");
                 printf("    |Choose :Select number 2 - return to the main interface and re-enter the function area to modify the name:\n");
-                printf("    |(Cautions :Any wrong numbers will be returned to the main interface too.)\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |(Cautions :Any wrong numbers will be returned to the main interface too.)                       |\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n");
 
                 int choice;
                 scanf("%d",&choice);
@@ -277,6 +331,7 @@ void  Addbooks(Node * node,char * Abook)
                 if(choice != 1)
                 {
                     ExiorNot6 = 1;
+
                 }
                 else
                 {
@@ -288,18 +343,12 @@ void  Addbooks(Node * node,char * Abook)
     }
 }
 
-
-void  RemoveBooks(Node * node,int Index,int temptry)
+/**Remove Books**/
+void RemoveBooks(Node * node,int Index,int temptry)
 {
     int i;
-    int temp = -1;
     if( node->child[0] == NULL )
     {
-        if(strcmp(node->authorname,"SmallCategories") == 0)
-        {
-            node->borrow -= 1;
-            //printf("node->booksname:%s,node->borrow:%d\n",node->booksname,node->borrow);
-        }
        return;
     }
     else
@@ -317,6 +366,7 @@ void  RemoveBooks(Node * node,int Index,int temptry)
 
                 LevelNumber[temptry -1] = LevelNumber[temptry -1] - 1;
             }
+
             else if(node->child[i]->booksindex == Index && node->child[i]->borrow == 0)
             {
                 printf("    |------------------------------------------------------------------------------------------------|\n");

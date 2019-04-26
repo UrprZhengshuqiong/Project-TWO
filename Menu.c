@@ -4,13 +4,38 @@
 #include "Tree.h"
 #include "List.h"
 #include "math.h"
-//int MaxAdd;
+#include "HistoricalRec.h"
+#include "HistoricalList.h"
+#include "Reader.h"
+#include "string.h"
+
+
 int JudgeNumber;
 
-void Begin(Node *head,Reader *reader)
+/**The global variable**/
+
+int ExiorNot3;
+
+int ExiorNot4;
+
+int ExiorNot5;
+
+int ExiorNot6;
+
+char RecordStuName[30];
+
+extern int LevelNumber[50];
+
+extern char BigCategories[30][50];
+
+extern int setlableblock;
+
+/**Menu interface**/
+void Begin(Node *head,Reader *reader,His *his)
 {
-    int choice;
+    double choice;
     int door = 0;
+    int BookRentNum;
 
     JudgeNumber = 0;
 
@@ -23,180 +48,190 @@ void Begin(Node *head,Reader *reader)
          printf("    |------------------------------------------------------------------------------------------------|\n");
          printf("    | 1.I am a student.                                                                              |\n");
          printf("    | 2.I am a staff.                                                                                |\n");
-         printf("    | 3.Exit.                                                                                        |\n");
+         printf("    | 3.New students are registered with the library.                                                |\n");
+         printf("    | 4.Exit.                                                                                        |\n");
          printf("    |------------------------------------------------------------------------------------------------|\n");
 
-         scanf("%d",&choice);
+         scanf("%lf",&choice);
 
         int comeIn = 0;
 
         while(choice == 1 && comeIn == 0)
         {
             printf("    |------------------------------------------------------------------------------------------------|\n");
-            printf("    |                             For student                                                        |\n");
+            printf("    |                            Login interface                                                     |\n");
             printf("    |------------------------------------------------------------------------------------------------|\n");
-            printf("    |Please choose what you want:(select number)                                                     |\n");
+            printf("    |Please enter the following information successively:                                            |\n");
             printf("    |------------------------------------------------------------------------------------------------|\n");
-            printf("    |1.Register with the library.                                                                    |\n");
-            printf("    |2.List all books.                                                                               |\n");
-            printf("    |3.Search for books.                                                                             |\n");
-            printf("    |4.Borrow a book.                                                                                |\n");
-            printf("    |5.Return a book.                                                                                |\n");
-            printf("    |6.Exit.                                                                                         |\n");
+            printf("    |***Any incorrect information will result in your login failure***                               |\n");
+            printf("    |------------------------------------------------------------------------------------------------|\n");
+            printf("    |Leeds student id:(Nine digits)                                                                  |\n");
             printf("    |------------------------------------------------------------------------------------------------|\n");
 
-            int stuChoice;
-            scanf("%d",&stuChoice);
+            int In_Studentnum;
 
-            switch(stuChoice)
+            scanf("%d",&In_Studentnum);
+
+            printf("    |------------------------------------------------------------------------------------------------|\n");
+            printf("    |password:                                                                                       |\n");
+            printf("    |------------------------------------------------------------------------------------------------|\n");
+
+            char password[20];
+
+            scanf("%s",password);
+
+            BookRentNum = examStudentPass(reader,In_Studentnum,password);
+
+            if(BookRentNum < 0)
             {
-                case 1:
-                       StudentRegister(reader);
-                    break;
+                 printf("    |------------------------------------------------------------------------------------------------|\n");
+                 printf("    |Login failed, please enter the correct student id and password.                                 |\n");
+                 printf("    |------------------------------------------------------------------------------------------------|\n");
+                 system("pause");
+                 break;
+            }
 
-                case 2:
-                       printf("    |------------------------------------------------------------------------------------------------|\n");
-                       printf("    |Book catalogues and borrowing information                                                       |\n");
-                       printf("    |------------------------------------------------------------------------------------------------|\n");
-                       SelectListallbooks(head);
-                    break;
+            do
+            {
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |Login successfully :)                                                                           |\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |                             For student                                                        |\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |Please choose what you want:(select number)                                                     |\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n");
+                printf("    |1.List all books.                                                                               |\n");
+                printf("    |2.Search for books.                                                                             |\n");
+                printf("    |3.Borrow a book.                                                                                |\n");
+                printf("    |4.Return a book.                                                                                |\n");
+                printf("    |5.Exit.                                                                                         |\n");
+                printf("    |------------------------------------------------------------------------------------------------|\n");
 
-                case 3:
-                    do{
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-                        printf("    |Please enter the number you want:                                                               |\n");
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-                        printf("    |1. I only know the title but I don't know the specific category                                 |\n");
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-                        printf("    |2. I know exactly which category it falls into                                                  |\n");
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
+                int stuChoice;
+
+                scanf("%d",&stuChoice);
+
+                switch(stuChoice)
+                {
+                    case 1:
+                           printf("    |------------------------------------------------------------------------------------------------|\n");
+                           printf("    |Book catalogues and borrowing information                                                       |\n");
+                           printf("    |------------------------------------------------------------------------------------------------|\n");
+                           SelectListallbooks(head);
+                        break;
+
+                    case 2:
+                        do{
+                            printf("    |------------------------------------------------------------------------------------------------|\n");
+                            printf("    |Please enter the number you want:                                                               |\n");
+                            printf("    |------------------------------------------------------------------------------------------------|\n");
+                            printf("    |1. I only know the title but I don't know the specific category                                 |\n");
+                            printf("    |------------------------------------------------------------------------------------------------|\n");
+                            printf("    |2. I know exactly which category it falls into                                                  |\n");
+                            printf("    |------------------------------------------------------------------------------------------------|\n");
 
 
-                        ExiorNot3 = -1;
+                            ExiorNot3 = -1;
 
-                        int choice;
+                            double choice;
 
-                        scanf("%d",&choice);
-                        if(choice == 1)
-                        {
-                                   printf("    |------------------------------------------------------------------------------------------------|\n");
-                                   printf("    |Please enter the name of the book you want to query:                                            |\n");
-                                   printf("    |------------------------------------------------------------------------------------------------|\n");
-                                   char book[50];
-                                   getchar();
-                                   gets(book);
-                                   Searchforbooks(head,book);
-
-                                   if(ExiorNot3 == -1)
-                                   {
-                                      printf("    |------------------------------------------------------------------------------------------------|\n");
-                                      printf("    |Error:Unable to find the correct book!!!!!!                                                     |\n");
-                                      printf("    |------------------------------------------------------------------------------------------------|\n");
-                                      system("pause");
-                                   }
-                            break;
-                        }
-                        else if(choice == 2)
-                        {
-                            int temptry;
-
-                            temptry = menu(2,head);
-
-                            int tempZero = temptry % 10;
-
-                            printf("tempZero = %d\n",tempZero);
-
-                            if(tempZero > 0 && tempZero <= 4)
+                            scanf("%lf",&choice);
+                            if(choice == 1)
                             {
-                                temptry /= 10;
+                                       printf("    |------------------------------------------------------------------------------------------------|\n");
+                                       printf("    |Please enter the name of the book you want to query:                                            |\n");
+                                       printf("    |------------------------------------------------------------------------------------------------|\n");
+                                       char book[50];
+                                       getchar();
+                                       gets(book);
+                                       Searchforbooks(head,book);
 
-                                   printf("    |------------------------------------------------------------------------------------------------|\n");
-                                   printf("    |Please enter the name of the book you want to query:                                            |\n");
-                                   printf("    |------------------------------------------------------------------------------------------------|\n");
-
-                                   char book[50];
-                                   getchar();
-                                   gets(book);
-                                   Searchforbooks(head->child[(temptry - 1 ) / 4]->child[(temptry - 1 ) % 4]->child[tempZero-1],book);
-
-                                   if(ExiorNot3 == -1)
-                                   {
-                                      printf("    |------------------------------------------------------------------------------------------------|\n");
-                                      printf("    |Error:Unable to find the correct book!!!!!!                                                     |\n");
-                                      printf("    |------------------------------------------------------------------------------------------------|\n");
-                                      system("pause");
-                                   }
+                                       if(ExiorNot3 == -1)
+                                       {
+                                          printf("    |------------------------------------------------------------------------------------------------|\n");
+                                          printf("    |Error:Unable to find the correct book!!!!!!                                                     |\n");
+                                          printf("    |------------------------------------------------------------------------------------------------|\n");
+                                          system("pause");
+                                       }
+                                break;
                             }
-                            break;
-
-                        }
-                        else
-                        {
-                            printf("    |------------------------------------------------------------------------------------------------|\n");
-                            printf("    |Error : Please enter the correct number:                                                        |\n");
-                            printf("    |------------------------------------------------------------------------------------------------|\n");
-                            fflush(stdin);
-                            system("pause");
-                        }
-
-                    }while(1);
-                    break;
-
-                case 4:
-
-                    ExiorNot4 = -1;
-
-                    do
-                    {
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-                        printf("    |Please enter the number you want:                                                               |\n");
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-                        printf("    |1. I know the specific category of books and names I want to borrow                             |\n");
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-                        printf("    |2. I only know the name of books I want to borrow                                               |\n");
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-                        printf("    |3. I know nothing !! Then we will jump to the main page for you.                                |\n");
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-
-                        int choice;
-                        scanf("%d",&choice);
-
-                        if(choice == 2)
-                        {
-                            printf("    |------------------------------------------------------------------------------------------------|\n");
-                            printf("    |Please enter the name of the book you want to borrow:                                           |\n");
-                            printf("    |------------------------------------------------------------------------------------------------|\n");
-
-                           char Bbook[50];
-                           getchar();
-                           gets(Bbook);
-
-                           Borrowingbooks(head,Bbook);
-
-                           if(ExiorNot4 == -1)
-                           {
-                              printf("    |------------------------------------------------------------------------------------------------|\n");
-                              printf("    |Unable to find the correct book!!!!!1                                                           |\n");
-                              printf("    |------------------------------------------------------------------------------------------------|\n");
-                              fflush(stdin);
-                           }
-
-                           break;
-                        }
-                        else if(choice == 1)
-                        {
-                            int temptry;
-
-                            temptry = menu(2,head);
-
-                            int tempZero = temptry % 10;
-
-                            printf("tempZero = %d\n",tempZero);
-
-                            if(tempZero > 0 && tempZero <= 4)
+                            else if(choice == 2)
                             {
-                                temptry /= 10;
+                                int temptry;
 
+                                temptry = BookSelMenu(2,head);
+
+                                int tempZero = temptry % 10;
+
+                                if(tempZero > 0 && tempZero <= 4)
+                                {
+                                    temptry /= 10;
+
+                                       printf("    |------------------------------------------------------------------------------------------------|\n");
+                                       printf("    |Please enter the name of the book you want to query:                                            |\n");
+                                       printf("    |------------------------------------------------------------------------------------------------|\n");
+
+                                       char book[50];
+
+                                       getchar();
+
+                                       gets(book);
+
+                                       Searchforbooks(head->child[(temptry - 1 ) / 4]->child[(temptry - 1 ) % 4]->child[tempZero-1],book);
+
+                                       if(ExiorNot3 == -1)
+                                       {
+                                          printf("    |------------------------------------------------------------------------------------------------|\n");
+                                          printf("    |Error:Unable to find the correct book!!!!!!                                                     |\n");
+                                          printf("    |------------------------------------------------------------------------------------------------|\n");
+                                          system("pause");
+                                       }
+                                }
+                                else
+                                {
+                                    printf("    |------------------------------------------------------------------------------------------------|\n");
+                                    printf("    |Error:Please enter the specific subclass number                                                 |\n");
+                                    printf("    |------------------------------------------------------------------------------------------------|\n");
+                                    system("pause");
+                                }
+                                break;
+
+                            }
+                            else
+                            {
+                                printf("    |------------------------------------------------------------------------------------------------|\n");
+                                printf("    |Error : Please enter the correct number:                                                        |\n");
+                                printf("    |------------------------------------------------------------------------------------------------|\n");
+                                fflush(stdin);
+                                system("pause");
+                            }
+
+                        }while(1);
+                        break;
+
+                    case 3:
+
+                        ExiorNot4 = -1;
+
+                        do
+                        {
+                            printf("    |------------------------------------------------------------------------------------------------|\n");
+                            printf("    |Please enter the number you want:                                                               |\n");
+                            printf("    |------------------------------------------------------------------------------------------------|\n");
+                            printf("    |1. I know the specific category of books and names I want to borrow                             |\n");
+                            printf("    |------------------------------------------------------------------------------------------------|\n");
+                            printf("    |2. I only know the name of books I want to borrow                                               |\n");
+                            printf("    |------------------------------------------------------------------------------------------------|\n");
+                            printf("    |3. I know nothing !! Then we will jump to the main page for you.                                |\n");
+                            printf("    |------------------------------------------------------------------------------------------------|\n");
+
+                            double choice;
+                            scanf("%lf",&choice);
+
+                            if(choice == 2)
+                            {
                                 printf("    |------------------------------------------------------------------------------------------------|\n");
                                 printf("    |Please enter the name of the book you want to borrow:                                           |\n");
                                 printf("    |------------------------------------------------------------------------------------------------|\n");
@@ -205,54 +240,35 @@ void Begin(Node *head,Reader *reader)
                                getchar();
                                gets(Bbook);
 
-                               Borrowingbooks(head->child[(temptry - 1 ) / 4]->child[(temptry - 1 ) % 4]->child[tempZero-1],Bbook);
+                               Borrowingbooks(head,Bbook,BookRentNum);
 
                                if(ExiorNot4 == -1)
                                {
                                   printf("    |------------------------------------------------------------------------------------------------|\n");
-                                  printf("    |Unable to find the correct book!!!!!                                                            |\n");
+                                  printf("    |Unable to find the correct book!!!!!1                                                           |\n");
                                   printf("    |------------------------------------------------------------------------------------------------|\n");
-                                  system("pause");
+                                  fflush(stdin);
                                }
+                               else if(ExiorNot4 == 2)
+                               {
+                                    if(BookRentNum < 3 && BookRentNum >= 0)
+                                    {
+                                        AddRecord(his,In_Studentnum,RecordStuName,0,Bbook);
+
+                                        BookRentNum += 1;
+                                    }
+                                       ModifyLoanInfor(reader,In_Studentnum,Bbook,0,BookRentNum);
+
+                               }
+
+                               break;
                             }
 
-                            break;
-                        }
-                        else if(choice == 3)
-                        {
-                            break;
-                        }
-                            printf("    |------------------------------------------------------------------------------------------------|\n");
-                            printf("    |Error : Please enter the correct number:                                                        |\n");
-                            printf("    |------------------------------------------------------------------------------------------------|\n");
-
-                            fflush(stdin);
-                            system("pause");
-
-                    }while(1);
-                    break;
-
-                case 5:
-                       ExiorNot5 = -1;
-
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-                        printf("    |Please enter the number you want:                                                               |\n");
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-                        printf("    |1. I know the specific category of books to return                                              |\n");
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-                        printf("    |2. I only know the name of books I want to borrow                                               |\n");
-                        printf("    |------------------------------------------------------------------------------------------------|\n");
-
-                       int choice;
-                       scanf("%d",&choice);
-
-                    do{
-                           if(choice == 1)
-                           {
+                            else if(choice == 1)
+                            {
                                 int temptry;
 
-                                temptry = menu(2,head);
-
+                                temptry = BookSelMenu(2,head);
 
                                 int tempZero = temptry % 10;
 
@@ -261,68 +277,195 @@ void Begin(Node *head,Reader *reader)
                                     temptry /= 10;
 
                                     printf("    |------------------------------------------------------------------------------------------------|\n");
-                                    printf("    |Please input the 'Name' of the right book to return:                                            |\n");
+                                    printf("    |Please enter the name of the book you want to borrow:                                           |\n");
                                     printf("    |------------------------------------------------------------------------------------------------|\n");
 
-                                   char Rbook[50];
+                                   char Bbook[50];
                                    getchar();
-                                   gets(Rbook);
+                                   gets(Bbook);
 
-                                    ReturnaBook(head->child[(temptry - 1 ) / 4]->child[(temptry - 1 ) % 4]->child[tempZero-1],Rbook);
+                                    Borrowingbooks(head->child[(temptry - 1 ) / 4]->child[(temptry - 1 ) % 4]->child[tempZero-1],Bbook,BookRentNum);
 
-                                   if(ExiorNot5 == -1)
+                                   if(ExiorNot4 == -1)
                                    {
                                       printf("    |------------------------------------------------------------------------------------------------|\n");
-                                      printf("    |Please enter the correct title again and it's unable to find the correct book!!                 |\n");
+                                      printf("    |Unable to find the correct book!!!!!                                                            |\n");
                                       printf("    |------------------------------------------------------------------------------------------------|\n");
-
                                       system("pause");
                                    }
-                                   break;
+                                   else if(ExiorNot4 == 2)
+                                   {
+                                      if(BookRentNum < 3 && BookRentNum >= 0)
+                                      {
+                                            AddRecord(his,In_Studentnum,RecordStuName,0,Bbook);
+                                            BookRentNum += 1;
+                                      }
+                                       ModifyLoanInfor(reader,In_Studentnum,Bbook,0,BookRentNum);
+                                   }
+
                                 }
-                             }
-                             else if(choice == 2)
-                             {
+
+                                else
+                                {
+
                                     printf("    |------------------------------------------------------------------------------------------------|\n");
-                                    printf("    |Please input the 'Name' of the right book to return:                                            |\n");
+                                    printf("    |Error : Please enter the correct number:                                                        |\n");
                                     printf("    |------------------------------------------------------------------------------------------------|\n");
 
-                                   char Rbook[50];
-                                   getchar();
-                                   gets(Rbook);
+                                    system("pause");
+                                }
+                               break;
+                            }
 
-                                    ReturnaBook(head,Rbook);
+                            else if(choice == 3)
+                            {
+                                break;
+                            }
+                                printf("    |------------------------------------------------------------------------------------------------|\n");
+                                printf("    |Error : Please enter the correct number:                                                        |\n");
+                                printf("    |------------------------------------------------------------------------------------------------|\n");
 
-                                   if(ExiorNot5 == -1)
-                                   {
-                                      printf("    |------------------------------------------------------------------------------------------------|\n");
-                                      printf("    |Please enter the correct title again and it's unable to find the correct book!!                 |\n");
-                                      printf("    |------------------------------------------------------------------------------------------------|\n");
-                                      system("pause");
+                                fflush(stdin);
+                                system("pause");
 
-                                   }
-                                   break;
-                             }
+                        }while(1);
+
+                        break;
+
+                    case 4:
+                           ExiorNot5 = -1;
 
                             printf("    |------------------------------------------------------------------------------------------------|\n");
-                            printf("    |Error : Please enter the correct number:                                                        |\n");
+                            printf("    |Please enter the number you want:                                                               |\n");
+                            printf("    |------------------------------------------------------------------------------------------------|\n");
+                            printf("    |1. I know the specific category of books to return                                              |\n");
+                            printf("    |------------------------------------------------------------------------------------------------|\n");
+                            printf("    |2. I only know the name of books I want to return                                               |\n");
                             printf("    |------------------------------------------------------------------------------------------------|\n");
 
-                            fflush(stdin);
-                            system("pause");
+                           double choice;
+                           scanf("%lf",&choice);
 
-                    }while(1);
+                        do{
+                               if(choice == 1)
+                               {
+                                    int temptry;
 
-                    break;
+                                    temptry = BookSelMenu(2,head);
 
-                case 6:
-                    comeIn = 1;
-                    break;
-            }
+
+                                    int tempZero = temptry % 10;
+
+                                    if(tempZero > 0 && tempZero <= 4)
+                                    {
+                                        temptry /= 10;
+
+                                        printf("    |------------------------------------------------------------------------------------------------|\n");
+                                        printf("    |Please input the 'Name' of the right book to return:                                            |\n");
+                                        printf("    |------------------------------------------------------------------------------------------------|\n");
+
+                                       char Rbook[50];
+                                       getchar();
+                                       gets(Rbook);
+
+                                        ReturnaBook(head->child[(temptry - 1 ) / 4]->child[(temptry - 1 ) % 4]->child[tempZero-1],Rbook);
+
+                                       if(ExiorNot5 == -1)
+                                       {
+                                          printf("    |------------------------------------------------------------------------------------------------|\n");
+                                          printf("    |Please enter the correct title again and it's unable to find the correct book!!                 |\n");
+                                          printf("    |------------------------------------------------------------------------------------------------|\n");
+
+                                          system("pause");
+                                       }
+                                       else if( ExiorNot5 == 2 )
+                                       {
+
+                                            ModifyLoanInfor(reader,In_Studentnum,Rbook,1,BookRentNum);
+
+                                            BookRentNum -=1 ;
+                                            AddRecord(his,In_Studentnum,RecordStuName,1,Rbook);
+                                       }
+                                       break;
+                                    }
+                                 }
+                                 else if(choice == 2)
+                                 {
+                                        printf("    |------------------------------------------------------------------------------------------------|\n");
+                                        printf("    |Please input the 'Name' of the right book to return:                                            |\n");
+                                        printf("    |------------------------------------------------------------------------------------------------|\n");
+
+                                       char Rbook[50];
+                                       getchar();
+                                       gets(Rbook);
+
+                                        ReturnaBook(head,Rbook);
+
+                                       if(ExiorNot5 == -1)
+                                       {
+                                          printf("    |------------------------------------------------------------------------------------------------|\n");
+                                          printf("    |Please enter the correct title again and it's unable to find the correct book!!                 |\n");
+                                          printf("    |------------------------------------------------------------------------------------------------|\n");
+                                          system("pause");
+
+                                       }
+
+                                       else if( ExiorNot5 == 2)
+                                       {
+                                            ModifyLoanInfor(reader,In_Studentnum,Rbook,1,BookRentNum);
+
+                                            BookRentNum -=1;
+
+                                            AddRecord(his,In_Studentnum,RecordStuName,1,Rbook);
+
+                                       }
+                                       break;
+                                 }
+
+                                printf("    |------------------------------------------------------------------------------------------------|\n");
+                                printf("    |Error : Please enter the correct number:                                                        |\n");
+                                printf("    |------------------------------------------------------------------------------------------------|\n");
+
+                                fflush(stdin);
+                                system("pause");
+
+                        }while(1);
+
+                        break;
+
+                    case 5:
+                        comeIn = 1;
+                        break;
+                   }
+
+                }while(comeIn != 1);
+
+                break;
         }
 
         while(choice == 2 && comeIn == 0)
         {
+            printf("    |------------------------------------------------------------------------------------------------|\n");
+            printf("    |                            Login interface                                                     |\n");
+            printf("    |------------------------------------------------------------------------------------------------|\n");
+            printf("    |Please enter the information successively:                                                      |\n");
+            printf("    |------------------------------------------------------------------------------------------------|\n");
+            printf("    |***Any incorrect information will result in your login failure***                               |\n");
+            printf("    |------------------------------------------------------------------------------------------------|\n");
+            printf("    |Password:(Six digits)                                                                           |\n");
+            printf("    |------------------------------------------------------------------------------------------------|\n");
+
+            int Staffnumber;
+
+            scanf("%d",&Staffnumber);
+        do{
+
+           if(Staffnumber == 123456)
+           {
+            printf("    |------------------------------------------------------------------------------------------------|\n");
+            printf("    |------------------------------------------------------------------------------------------------|\n");
+            printf("    |Login successfully :)                                                                           |\n");
+            printf("    |------------------------------------------------------------------------------------------------|\n\n");
             printf("    |------------------------------------------------------------------------------------------------|\n");
             printf("    |                              For staff                                                         |\n");
             printf("    |------------------------------------------------------------------------------------------------|\n");
@@ -332,11 +475,13 @@ void Begin(Node *head,Reader *reader)
             printf("    |2.List all registered users.                                                                    |\n");
             printf("    |3.Add books.                                                                                    |\n");
             printf("    |4.Remove book.                                                                                  |\n");
-            printf("    |5.Exit.                                                                                         |\n");
+            printf("    |5.Check the debit and credit record.                                                            |\n");
+            printf("    |6.Exit.                                                                                         |\n");
             printf("    |------------------------------------------------------------------------------------------------|\n");
 
             int staChoice;
             scanf("%d",&staChoice);
+
             Reader * pMove = reader->next;
 
             switch(staChoice)
@@ -349,13 +494,16 @@ void Begin(Node *head,Reader *reader)
                     break;
 
                 case 2:
-                     printf("    |------------------------------------------------------------------------------------------------|\n");
-                     printf("    |Studentnum--------Studentname----------Collegename--------Index---------Booksrentname-----------|\n");
-                     printf("    |------------------------------------------------------------------------------------------------|\n");
-                     printList(pMove);
+                    printf("    |------------------------------------------------------------------------------------------------|\n");
+                    printf("    |                               User information                                                 |\n");
+                    printf("    |------------------------------------------------------------------------------------------------|\n");
+                    printList(pMove);
                     break;
 
                 case 3:
+
+                    setlableblock = 1;
+
                     printf("    |------------------------------------------------------------------------------------------------|\n");
                     printf("    |Please select the type of book you want to add,please enter the serial number before the book   |\n");
                     printf("    |------------------------------------------------------------------------------------------------|\n");
@@ -364,15 +512,15 @@ void Begin(Node *head,Reader *reader)
 
                         int temptry;
 
-                        temptry = menu(num,head);
+                        temptry = BookSelMenu(num,head);
 
                         int tempZero = temptry % 10;
 
-                        printf("tempZero = %d\n",tempZero);
 
                         if(tempZero > 0 && tempZero <= 4)
                         {
                             temptry /= 10;
+
                             JudgeNull(head->child[(temptry - 1 ) / 4]->child[(temptry - 1 ) % 4]->child[tempZero-1]);
 
                            if(JudgeNumber == 0)
@@ -388,6 +536,14 @@ void Begin(Node *head,Reader *reader)
 
                                 gets(Abook);
 
+                                printf("    |------------------------------------------------------------------------------------------------|\n");
+                                printf("    |Please enter the authorName you want to add: (No Spaces)                                        |\n");
+                                printf("    |------------------------------------------------------------------------------------------------|\n");
+
+                                char authorName[50];
+                                scanf("%s",authorName);
+
+
                                 printf("    |Please make sure you want to add <<%s>> book\n",Abook);
 
                                 printf("    |Please enter number 1 for yes ,number 2 for no,and any wrong number will return to the menu. \n");
@@ -398,13 +554,23 @@ void Begin(Node *head,Reader *reader)
 
                                 if(choice3 == 1)
                                 {
-                                    Addbooks(head->child[(temptry - 1 ) / 4 ]->child[(temptry - 1 ) % 4]->child[tempZero-1],Abook);
+                                    int before = LevelNumber[temptry -1];
 
-                                    //printf("LevelNumber[temptry -1]_in = %d\n",LevelNumber[temptry -1]);
+                                    Addbooks(head->child[(temptry - 1 ) / 4 ]->child[(temptry - 1 ) % 4]->child[tempZero-1],Abook,authorName,temptry);
 
-                                    LevelNumber[temptry -1] = LevelNumber[temptry -1] + 1;
+                                    int after = LevelNumber[temptry -1];
+                                    if(before == after)
+                                    {
+                                          printf("    |------------------------------------------------------------------------------------------------|\n");
+                                          printf("    |Error :Add failed, please add again                                                             |\n");
+                                          printf("    |------------------------------------------------------------------------------------------------|\n");
+                                          system("pause");
+                                    }
+                                    else
+                                    {
+                                       setlable(head->child[(temptry - 1 ) / 4 ]->child[(temptry - 1 ) % 4]->child[tempZero-1],2);
+                                    }
 
-                                    //printf("LevelNumber[temptry -1]_out = %d\n",LevelNumber[temptry -1]);
                                 }
 
                            }
@@ -412,7 +578,9 @@ void Begin(Node *head,Reader *reader)
                             {
                                 JudgeNumber = 0;
                             }
+
                             system("pause");
+
                             break;
                         }
                         else
@@ -423,22 +591,23 @@ void Begin(Node *head,Reader *reader)
                             fflush(stdin);
                             system("pause");
                         }
+
                     }while(1);
 
                     break;
 
                 case 4:
+
+                    setlableblock = 1;
+
                     do{
                             int num = 2;
 
                             int temptry;
 
-                            temptry = menu(num,head);
+                            temptry = BookSelMenu(num,head);
 
                             int tempZero = temptry % 10;
-
-                            printf("temptry = %d\n",temptry);
-                            printf("tempZero = %d\n",tempZero);
 
                             if(tempZero > 0 && tempZero <= 4)
                             {
@@ -480,6 +649,10 @@ void Begin(Node *head,Reader *reader)
                                           printf("    |------------------------------------------------------------------------------------------------|\n");
                                           system("pause");
                                     }
+                                    else
+                                    {
+                                       setlable(head->child[(temptry - 1 ) / 4 ]->child[(temptry - 1 ) % 4]->child[tempZero-1],3);
+                                    }
                                 }
                                 break;
                              }
@@ -496,22 +669,48 @@ void Begin(Node *head,Reader *reader)
                     break;
 
                 case 5:
-                    comeIn = 1;
-                    break;
-            }
-        }
+                    printf("    |------------------------------------------------------------------------------------------------|\n");
+                    printf("    |A timetable for borrowing and returning books:                                                  |\n");
+                    printf("    |------------------------------------------------------------------------------------------------|\n");
 
+                    His *HispMove= his->next;
+
+                    printHisList(HispMove);
+
+                    break;
+                case 6:
+                     comeIn = 1;
+                    break;
+
+            }
+          }
+          else
+          {
+                 printf("    |------------------------------------------------------------------------------------------------|\n");
+                 printf("    |Login failed, please enter the correct  password.                                               |\n");
+                 printf("    |------------------------------------------------------------------------------------------------|\n");
+                 system("pause");
+                 break;
+
+          }
+
+         }while(comeIn != 1);
+        }
         if(choice == 3)
+        {
+            StudentRegister(reader);
+        }
+        else if(choice == 4)
         {
             door = 1;
             break;
         }
-
-        if(choice != 1 && choice != 2 && choice != 3)
+        else if(choice != 1 && choice != 2 && choice != 3 && choice != 4)
         {
             printf("    |------------------------------------------------------------------------------------------------|\n");
             printf("    |Error : Please enter the correct number, 1 for students and 2 for employees.                    |\n");
             printf("    |------------------------------------------------------------------------------------------------|\n");
+            system("pause");
             fflush(stdin);
         }
 
@@ -520,10 +719,14 @@ void Begin(Node *head,Reader *reader)
   }while(door != 1);
 
   WriteLibrary(head);
+
   WriteStudent(reader);
+
+  WriteHistorical(his);
 
 }
 
+/**Judge and show the user's books**/
 void SelectListallbooks(Node *head)
 {
      int listdoor = 0;
@@ -534,21 +737,23 @@ void SelectListallbooks(Node *head)
                         printf("    |------------------------------------------------------------------------------------------------|\n");
                         printf("    |1. Browse directly to the sixteen categories (Enter number 1)                                   |\n");
                         printf("    |2. View a specific subcategory (Enter number 2)                                                 |\n");
-                        printf("    |3. Exit(Enter number 2)                                                                         |\n");
+                        printf("    |3. Exit(Enter number 3)                                                                         |\n");
                         printf("    |------------------------------------------------------------------------------------------------|\n");
 
 
-                        int listchoice;
+                        double templistchoice;
 
-                        scanf("%d",&listchoice);
+                        scanf("%lf",&templistchoice);
 
-                        if(listchoice == 3)
+                        if(templistchoice == 3)
                         {
                              listdoor = 1;
                         }
-                        else if(listchoice == 1 || listchoice == 2)
+                        else if(templistchoice == 1 || templistchoice == 2)
                         {
-                                listchoice = menu(listchoice,head);
+                                int listchoice = (int)templistchoice;
+
+                                listchoice = BookSelMenu(listchoice,head);
 
                                 int temp = listchoice % 10;
 
@@ -626,7 +831,8 @@ void SelectListallbooks(Node *head)
                     }while(listdoor == 0);
 }
 
-int menu(int choice,Node* head)
+/**Print and shows the big sixteen class name**/
+int BookSelMenu(int choice,Node* head)
 {
     int door = 1;
     if(choice == 1)
@@ -678,10 +884,9 @@ int menu(int choice,Node* head)
                         {
                             int temp = (int)listchoice % 100;
 
-                            //printf("temp = %d\n",temp);
 
                             printf("    |------------------------------------------------------------------------------------------------|\n");
-                            printf("    |We will show you the content of the book number:%d                                              |\n",temp);
+                            printf("    |We will show you the content of the book number:%d                                              \n",temp);
                             printf("    |If you think the input is wrong, please exit and re-enter:                                      |\n");
                             printf("    |------------------------------------------------------------------------------------------------|\n");
 
@@ -718,10 +923,11 @@ int menu(int choice,Node* head)
                                         printf("    |------------------------------------------------------------------------------------------------|\n");
 
                                         giveName(head->child[i]->child[j]);
+
                                         temp++;
                                     }
                                 }
-                      do{
+                       do{
 
                                 printf("    |------------------------------------------------------------------------------------------------|\n");
                                 printf("    |Please select the type of book you want:                                                        |\n");
@@ -750,13 +956,13 @@ int menu(int choice,Node* head)
                                 }
 
                }while(door == 1);
-
     }
+    return 0;
 }
 
+/**Judge and add a new book subclass.**/
 void JudgeNull(Node *node)
 {
-  int i;
   if(node->child[0] == NULL){
      if(strcmp(node->booksname,"null") == 0)
      {
@@ -826,25 +1032,27 @@ void JudgeNull(Node *node)
   }
 }
 
+/**Print and shows the small class name**/
 void giveName(Node* node)
 {
    int i;
    if(node->child[0] == NULL)
    {
-     if(strcmp(node->authorname,"SmallCategories") == 0)
-     {
-         int x = (node->booksindex) % 10;
-         int y = (node->booksindex) / 10;
-         printf("    |---|%d.%d %s\n",y,x,node->booksname);
-     }
      return;
   }
   else{
         for(i = 0;i < 4;i++)
         {
             giveName(node->child[i]);
+
+            if(strcmp(node->child[i]->authorname,"SmallCategories\0") == 0)
+            {
+                 int x = (node->child[i]->booksindex) % 10;
+                 int y = (node->child[i]->booksindex) / 10;
+                 printf("    |---|%d.%d %s\n",y,x,node->child[i]->booksname);
+            }
         }
-  }
+    }
 }
 
 

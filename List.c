@@ -2,7 +2,9 @@
 #include "stdlib.h"
 #include "List.h"
 #include "Reader.h"
+#include "string.h"
 
+/**Create header**/
 Reader* createList()
 {
 	Reader* headNode = (Reader*)malloc(sizeof(Reader));
@@ -10,27 +12,75 @@ Reader* createList()
 	return headNode;
 }
 
-void printList(Reader* pMove)
+/**Reads data from a file and stores it in a List**/
+void readStudent(Reader *reader)
 {
-    if(!pMove)
+    char delims[] = ",";
+
+    FILE *fp=fopen("data/Students.txt","r");
+
+    if(!fp)
     {
-       return;
+        printf("open error");
+        return 0;
     }
-    else
+    int a;
+
+    char b[20],c[50],d[20],e[200];
+
+    int count;
+
+    Reader *pnew;
+
+    while((fscanf(fp,"%d %s %s %s %d",&a,&b,&c,&d,&count))!=EOF)
     {
-       printList(pMove->next);
-       printf("    |");
-       printf("%s        %10s",pMove->Studentnum,pMove->Studentname,pMove->Collegename,pMove->booksrentindex,pMove->booksrentname);
-       printf("%25s        %s        '%s' \n",pMove->Collegename,pMove->booksrentindex,pMove->booksrentname);
-       printf("    |--------------------------------------------------------------------------------------------|\n");
+        fscanf(fp,"\n%[^\n]",&e);
+
+        pnew = (Reader*)malloc(sizeof(Reader));
+
+		pnew->Studentnum = a;
+		strcpy(pnew->Studentname, b);
+		strcpy(pnew->Collegename, c);
+        strcpy(pnew->password, d);
+
+        pnew->BookRentNum = count;
+
+        char *result = NULL;
+
+        result = strtok(e,delims);
+
+        int i = 0;
+
+        while( result != NULL )
+        {
+           strcpy(pnew->booksrentname[i],result);
+
+           result = strtok(NULL,delims);
+
+           i++;
+        }
+/*
+        printf("pnew->Studentnum = %d\n",pnew->Studentnum);
+        printf("pnew->Studentname = %s\n",pnew->Studentname);
+        printf("pnew->Collegename = %s\n",pnew->Collegename);
+
+        printf("pnew->password = %s\n",pnew->password);
+        printf("pnew->BookRentNum = %d\n\n",pnew->BookRentNum);
+*/
+
+		pnew->next = reader->next;
+		reader->next = pnew;
     }
+    fclose(fp);
 }
 
+/**Writes the contents of the quadtree to a file**/
 void WriteStudent(Reader* reader)
 {
-    FILE *fp2=fopen("Students.txt","w");
+    FILE *fp2=fopen("data/Students.txt","w");
 
     Reader *pwrite;
+
     pwrite = (Reader*)malloc(sizeof(Reader));
 
 
@@ -50,44 +100,37 @@ void writeList(Reader *pmove,FILE *fp2)
         return;
     }
     else{
+
         writeList(pmove->next,fp2);
-        fprintf(fp2,"%s %s %s %s %s\n",pmove->Studentnum,pmove->Studentname,pmove->Collegename,pmove->booksrentindex,pmove->booksrentname);
+
+        fprintf(fp2,"%d %s %s %s %d\n",pmove->Studentnum,pmove->Studentname,pmove->Collegename,pmove->password,pmove->BookRentNum);
+
+        char BookName[200] = {};
+
+        int i;
+
+        for(i = 0;i < pmove->BookRentNum;i++)
+        {
+             strcat(BookName,pmove->booksrentname[i]);
+
+             strcat(BookName,",");
+
+         }
+         fprintf(fp2,"%s\n\n",BookName);
+
         pmove=pmove->next;
     }
 }
 
-void readStudent(Reader *reader)
+/**Destroy the entire single linked list and free memory**/
+void freelist(Reader * reader)
 {
-    FILE *fp=fopen("data/Students.txt","r");
-    if(!fp)
+    Reader * p;
+    while(reader != NULL)
     {
-        printf("open error");
-        return 0;
-    }
-    char a[20],b[20],c[50],d[20],e[20];
-
-    Reader *pnew;
-
-    while((fscanf(fp,"%s %s %s %s %s",&a,&b,&c,&d,&e))!=EOF)
-    {
-        pnew = (Reader*)malloc(sizeof(Reader));
-
-		strcpy(pnew->Studentnum, a);
-		strcpy(pnew->Studentname, b);
-		strcpy(pnew->Collegename, c);
-        strcpy(pnew->booksrentindex, d);
-		strcpy(pnew->booksrentname, e);
-/*
-        printf("Welcome readStudent().\n");
-        printf("pnew->Studentnum = %s\n",pnew->Studentnum);
-        printf("pnew->Studentname = %s\n",pnew->Studentname);
-        printf("pnew->Studentname = %s\n",pnew->Collegename);
-        printf("pnew->booksrentindex = %s\n",pnew->booksrentindex);
-        printf("pnew->booksrentname = %s\n\n",pnew->booksrentname);
-*/
-		pnew->next = reader->next;
-		reader->next = pnew;
-    }
-    fclose(fp);
+        p = reader;
+        reader = reader->next;
+        free(p);
+        p = NULL;
+   }
 }
-

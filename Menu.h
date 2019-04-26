@@ -3,26 +3,21 @@
 #include "Tree.h"
 #include "List.h"
 #include "LibraryBook.h"
-int ExiorNot3;
+#include "HistoricalRec.h"
 
-int ExiorNot4;
+/**Menu interface**/
+void Begin(Node *head,Reader *reader,His *his);
 
-int ExiorNot5;
-
-int ExiorNot6;
-
-int numbers;
-
-int MaxAdd;
-
-void Begin(Node *head,Reader *reader);
-
+/**Judge and show the user's books**/
 void SelectListallbooks(Node *head);
 
-void JudgeNull(Node *node);
+/**Print and shows the big sixteen class name**/
+int BookSelMenu(int choice,Node* head);
 
+/**Print and shows the small class name**/
 void giveName(Node* head);
 
-int menu(int choice,Node* node);
+/**Judge and add a new book subclass.**/
+void JudgeNull(Node *node);
 
 #endif // MENU_H_INCLUDED

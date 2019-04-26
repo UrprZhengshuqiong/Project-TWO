@@ -31,6 +31,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="HistoricalList.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="HistoricalList.h" />
+		<Unit filename="HistoricalRec.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="HistoricalRec.h" />
 		<Unit filename="LibraryBook.c">
 			<Option compilerVar="CC" />
 		</Unit>
